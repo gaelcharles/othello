@@ -1,3 +1,10 @@
+
+# Created by https://www.gitignore.io/api/git,c++,codeblocks
+
+### C++ ###
+# Prerequisites
+*.d
+
 # Compiled Object files
 *.slo
 *.lo
@@ -27,3 +34,17 @@
 *.exe
 *.out
 *.app
+
+### CodeBlocks ###
+# specific to CodeBlocks IDE
+*.layout
+*.depend
+
+# generated directories
+bin/
+obj/
+
+### Git ###
+*.orig
+
+# End of https://www.gitignore.io/api/git,c++,codeblocks
