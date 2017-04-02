@@ -14,6 +14,7 @@ int main()
 {
     DEFAULT_COLOR;
     system("cls");
+
     cout << "Othello world!" << endl;
     return 0;
 }
