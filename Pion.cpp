@@ -1,11 +1,15 @@
 #include "Pion.h"
 
 // Constructeurs
-Pion::Pion(bool _couleur, Coords _coords) :
-    m_couleur(_couleur), m_pos(_coords)
+// Surchargé
+Pion::Pion(bool _couleur, int _x, int _y) :
+    m_couleur(_couleur)
 {
+    m_pos.x = _x;
+    m_pos.y = _y;
 }
 
+// Par défaut
 Pion::Pion() :
     m_couleur(false)
 {

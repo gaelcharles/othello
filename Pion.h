@@ -11,7 +11,7 @@ class Pion
     public :
         // C & D
         Pion();
-        Pion(bool _couleur, Coords _coords);
+        Pion(bool _couleur, int _x, int _y);
         ~Pion();
 };
 

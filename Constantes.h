@@ -3,7 +3,9 @@
 
 /// MACROS ///
 
-#define DEFAULT_COLOR Color(BLANC, VERT)
+#define DEFAULT_COLOR Color(BLANC_CONSOLE, VERT)
+#define BLANC true
+#define NOIR false
 
 /// CONSTANTES ///
 
@@ -19,7 +21,7 @@ typedef struct StructCoords
 
 typedef enum EnumColors
 {
-    NOIR,
+    NOIR_CONSOLE,
     BLEU_FONCE,
     VERT,
     BLEU_VERT,
@@ -34,7 +36,7 @@ typedef enum EnumColors
     ROUGE,
     ROSE,
     JAUNE,
-    BLANC
+    BLANC_CONSOLE
 }e_color;
 
 #endif // CONSTANTES_H_INCLUDED
