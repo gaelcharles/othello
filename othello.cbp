@@ -33,6 +33,8 @@
 			<Add option="-fexceptions" />
 		</Compiler>
 		<Unit filename="Constantes.h" />
+		<Unit filename="Damier.cpp" />
+		<Unit filename="Damier.h" />
 		<Unit filename="Graphics.cpp" />
 		<Unit filename="Graphics.h" />
 		<Unit filename="Jeu.cpp" />
