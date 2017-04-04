@@ -48,3 +48,6 @@ obj/
 *.orig
 
 # End of https://www.gitignore.io/api/git,c++,codeblocks
+
+# Autres fichiers #
+Documents/

@@ -35,6 +35,12 @@
 		<Unit filename="Constantes.h" />
 		<Unit filename="Graphics.cpp" />
 		<Unit filename="Graphics.h" />
+		<Unit filename="Jeu.cpp" />
+		<Unit filename="Jeu.h" />
+		<Unit filename="Joueur.cpp" />
+		<Unit filename="Joueur.h" />
+		<Unit filename="Pion.cpp" />
+		<Unit filename="Pion.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
