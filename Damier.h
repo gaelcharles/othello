@@ -13,6 +13,12 @@ class Damier
         // C & D
         Damier();
         ~Damier();
+
+        // Getters
+        std::vector<std::vector<Pion*> > getPlateau() const;
+
+        // Méthodes
+        void Afficher();
 };
 
 

@@ -19,6 +19,8 @@ int main()
     DEFAULT_COLOR;
     system("cls");
 
-    cout << "Othello world!" << endl;
+    // Boucle de jeu
+    g.getDamier().Afficher();
+    system("pause");
     return 0;
 }

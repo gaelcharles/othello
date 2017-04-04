@@ -15,6 +15,9 @@ class Jeu
         // C & D
         Jeu();
         ~Jeu();
+
+        // Getters
+        Damier getDamier() const;
 };
 
 

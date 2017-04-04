@@ -11,3 +11,9 @@ Jeu::Jeu() :
 Jeu::~Jeu()
 {
 }
+
+// Getters
+Damier Jeu::getDamier() const
+{
+    return m_damier;
+}
