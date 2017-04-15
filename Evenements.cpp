@@ -9,8 +9,8 @@ void Curseur::deplacer(char _key, int& _ligneCurseurDamier, int& _colonneCurseur
 {
     switch(_key)
     {
-
-    case 'z': //z : haut
+    case 'Z': // Z : Haut
+    case 'z':
         _ligneCurseurDamier--; //remonte le curseur
         if(_ligneCurseurDamier < 0) _ligneCurseurDamier = 0; //ne peut pas dépasser le damier
 
@@ -18,7 +18,8 @@ void Curseur::deplacer(char _key, int& _ligneCurseurDamier, int& _colonneCurseur
         if(_ligneCurseurAffichage < _origineCurseurLigne) _ligneCurseurAffichage = _origineCurseurLigne; //ne peut pas dépasser
         break;
 
-    case 's': //bas
+    case 'S': // S : Bas
+    case 's':
         _ligneCurseurDamier++;
         if(_ligneCurseurDamier > _ligneCurseurDamierMax) _ligneCurseurDamier = _ligneCurseurDamierMax; // nbLignes-1 car l'indice va de 0 à 4
 
@@ -26,20 +27,22 @@ void Curseur::deplacer(char _key, int& _ligneCurseurDamier, int& _colonneCurseur
         if(_ligneCurseurAffichage > _ligneCurseurAffichageMax) _ligneCurseurAffichage = _ligneCurseurAffichageMax;
         break;
 
-    case 'q': //gauche
+    case 'Q': // Q : Gauche
+    case 'q':
         _colonneCurseurDamier--;
         if(_colonneCurseurDamier < 0) _colonneCurseurDamier = 0;
 
-        _colonneCurseurAffichage-=3;
+        _colonneCurseurAffichage-=4;
         if(_colonneCurseurAffichage < _origineCurseurColonne) _colonneCurseurAffichage = _origineCurseurColonne;
         break;
 
-    case 'd': //droite
+    case 'D': // D : Droite
+    case 'd':
         _colonneCurseurDamier++;
         if(_colonneCurseurDamier > _colonneCurseurDamierMax) _colonneCurseurDamier = _colonneCurseurDamierMax; //nbColonnes-1 car l'indice va de 0 à 4
 
 
-        _colonneCurseurAffichage+=3;
+        _colonneCurseurAffichage+=4;
         if(_colonneCurseurAffichage > _colonneCurseurAffichageMax) _colonneCurseurAffichage = _colonneCurseurAffichageMax;
         break;
     }
@@ -52,7 +55,7 @@ bool Partie::deroulement(Console* pConsole, Damier* damier, char tour, char adv)
     /// DECLARATION DES VARIABLES D'AFFICHAGE DU CURSEUR DU DAMIER
 
     //initialisation des valeurs constantes du sous-programme
-    const int origineCurseurLigne = damier->getLigneAffichage()+2;
+    const int origineCurseurLigne = damier->getLigneAffichage()+1;
     const int origineCurseurColonne = damier->getColonneAffichage()+2;
 
     int ligneCurseurDamier, colonneCurseurDamier;
@@ -64,7 +67,7 @@ bool Partie::deroulement(Console* pConsole, Damier* damier, char tour, char adv)
 
     /// INITIALISATION DES VARIABLES
 
-    ///DEBUT VARIABLES CURSEUR
+    /// DEBUT VARIABLES CURSEUR
     //coordonnées réelles de la case pointée par le curseur
     ligneCurseurDamier = 0;
     colonneCurseurDamier = 0;
@@ -75,73 +78,61 @@ bool Partie::deroulement(Console* pConsole, Damier* damier, char tour, char adv)
 
     //ligne et colonne maximale d'affichage du curseur
     ligneCurseurAffichageMax = 2*damier->getTaille() + origineCurseurLigne-2;
-    colonneCurseurAffichageMax = 3*(damier->getTaille() -1) + origineCurseurColonne;
+    colonneCurseurAffichageMax = 4*(damier->getTaille() -1) + origineCurseurColonne;
 
     //coordonnées d'affichage du curseur
     ligneCurseurAffichage = origineCurseurLigne;
     colonneCurseurAffichage = origineCurseurColonne;
 
-
     bool rafraichirEcran = true; //pour rentrer dès le début dans la boucle d'affichage
     bool quitter=false;
 
+    GfxDamier::afficher(pConsole, damier);
+
     while(!quitter)
     {
-
-
-
         // GESTIONS DES EVENEMENTS CLAVIER
         if(pConsole->isKeyboardPressed())
         {
             //récupération de la touche sur laquelle l'utilisateur a appuyé
             char touche = pConsole->getInputKey();
 
-
-            if(touche=='z'||touche=='s'||touche=='q'||touche=='d') //commandes de déplacement du curseur
+            if(touche=='z' || touche=='s' || touche=='q' || touche=='d') //commandes de déplacement du curseur
             {
                 Curseur::deplacer(touche, ligneCurseurDamier, colonneCurseurDamier, ligneCurseurAffichage, colonneCurseurAffichage,
                                   origineCurseurLigne, origineCurseurColonne, ligneCurseurAffichageMax, colonneCurseurAffichageMax,
                                   ligneCurseurDamierMax, colonneCurseurDamierMax);
 
-                rafraichirEcran = true;
+                pConsole->gotoLigCol(ligneCurseurAffichage, colonneCurseurAffichage);
             }
 
-            if(touche==32)
+            if(touche==13)
             {
                 if(damier->getDamier()[ligneCurseurDamier][colonneCurseurDamier]=='.')
                 {
                     damier->changement(tour, adv, ligneCurseurDamier, colonneCurseurDamier);
                     quitter=true;
                     damier->reset();
+                    rafraichirEcran = true;
+
                 }
             }
 
         }
 
-
         if(rafraichirEcran)
         {
-            system("cls");
-
-            pConsole->gotoLigCol(0, 0);
-
-
-
             pConsole->gotoLigCol(origineCurseurLigne-4, origineCurseurColonne);
 
             GfxInfos::afficherTour(pConsole, tour);
             GfxInfos::afficherScore(pConsole, damier);
-            damier->afficher(pConsole);
+            GfxDamier::afficherContenu(pConsole, damier);
 
             pConsole->gotoLigCol(ligneCurseurAffichage, colonneCurseurAffichage);
 
             rafraichirEcran = false;
         }
-
-            //quitter=false;
-
     }
-
     system("cls");
 
 return false;

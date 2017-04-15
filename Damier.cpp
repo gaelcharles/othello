@@ -8,8 +8,6 @@
 Damier::Damier(int _taille, int _ligneAffichage, int _colonneAffichage)
     :m_taille(_taille), m_ligneAffichage(_ligneAffichage), m_colonneAffichage(_colonneAffichage)
 {
-    //constructeur
-
     //on crée un vecteur tampon
     std::vector<char> tmp;
     for(int i=0; i<m_taille; i++)
@@ -19,6 +17,7 @@ Damier::Damier(int _taille, int _ligneAffichage, int _colonneAffichage)
             tmp.push_back(' ');
         }
         m_damier.push_back(tmp);
+        tmp.clear();
     }
 
     m_damier[3][3]='B';
@@ -501,7 +500,7 @@ void Damier::reset()
     }
 }
 
-int Damier::comptageNoir()
+int Damier::comptagePions(char _color)
 {
     int n=0;
 
@@ -509,7 +508,7 @@ int Damier::comptageNoir()
     {
         for(int j=0;j<m_taille;j++)
         {
-            if(m_damier[i][j]=='N')
+            if(m_damier[i][j]==_color)
             {
                 n++;
             }
@@ -517,22 +516,4 @@ int Damier::comptageNoir()
     }
 
     return n;
-}
-
-int Damier::comptageBlanc()
-{
-    int b=0;
-
-    for(int i=0;i<m_taille;i++)
-    {
-        for(int j=0;j<m_taille;j++)
-        {
-            if(m_damier[i][j]=='B')
-            {
-                b++;
-            }
-        }
-    }
-
-    return b;
 }

@@ -2,16 +2,13 @@
 #define EVENEMENTS_H
 
 #include "Damier.h"
-
-#include "console.h"
+#include "Constantes.h"
+#include "Console.h"
 #include "Affichage.h"
 
 #include <iostream>
 #include <windows.h>
 #include <time.h>
-
-#define LIGNE_AFFICHAGE 8
-#define COLONNE_AFFICHAGE 7
 
 namespace Curseur
 {

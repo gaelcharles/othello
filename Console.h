@@ -3,17 +3,25 @@
 
 #include <iostream>
 
-enum Color
+typedef enum EnumColors
 {
-    COLOR_BLACK = 0,
-    COLOR_WHITE = 1,
-    COLOR_RED = 2,
-    COLOR_GREEN = 3,
-    COLOR_BLUE = 4,
-    COLOR_YELLOW = 5,
-    COLOR_PURPLE = 6,
-    COLOR_DEFAULT = 7, // gris couleur de base de la console
-};
+    COULEUR_NOIR,
+    COULEUR_BLEU_FONCE,
+    COULEUR_VERT,
+    COULEUR_BLEU_VERT,
+    COULEUR_MARRON,
+    COULEUR_VIOLET,
+    COULEUR_OR,
+    COULEUR_GRIS_CLAIR,
+    COULEUR_GRIS,
+    COULEUR_BLEU,
+    COULEUR_VERT_CLAIR,
+    COULEUR_CYAN,
+    COULEUR_ROUGE,
+    COULEUR_ROSE,
+    COULEUR_JAUNE,
+    COULEUR_BLANC
+}e_color;
 
 class Console
 {
@@ -29,8 +37,6 @@ class Console
         // Attributs
         static Console* m_instance;
 
-        // Méthodes privées
-        void _setColor(int front, int back);
     public:
         // Méthodes statiques (publiques)
         static Console* getInstance();
@@ -38,9 +44,10 @@ class Console
 
         // Méthodes publiques
         void gotoLigCol(int lig, int col);
+        void gotoDamierXY(int x, int y);
         bool isKeyboardPressed();
         int getInputKey();
-        void setColor(Color col);
+        void setColor(e_color texte, e_color fond);
 };
 
 #endif // CONSOLE_H_INCLUDED
