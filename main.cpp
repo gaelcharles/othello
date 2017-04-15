@@ -29,6 +29,8 @@ int main()
     pConsole->setColor(COULEUR_BLANC, COULEUR_VERT);
     system("cls");
 
+    // NOUVELLE MODIF DE OUF
+
     while(!quitter)
     {
 
