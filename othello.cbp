@@ -32,6 +32,15 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="Affichage.cpp" />
+		<Unit filename="Affichage.h" />
+		<Unit filename="Console.cpp" />
+		<Unit filename="Console.h" />
+		<Unit filename="Constantes.h" />
+		<Unit filename="Damier.cpp" />
+		<Unit filename="Damier.h" />
+		<Unit filename="Evenements.cpp" />
+		<Unit filename="Evenements.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
