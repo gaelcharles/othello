@@ -17,6 +17,10 @@
 
 #define CARAC_CARRE char(254)
 
+#define BLANC 'B'
+#define NOIR 'N'
+
+
 /// CONSTANTES ///
 
 #define TAILLE_PLATEAU 8

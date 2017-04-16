@@ -7,17 +7,8 @@
 
 namespace GfxDamier
 {
-void afficher(Console* _pConsole, Damier* _pDamier);
-
-//void afficherColonnes(Console* _pConsole,  int _nbColonnes, int _ligneAffichage, int _colonneAffichage);
-//
-//void afficherLignes(Console* _pConsole, int _nbLignes, int _nbColonnes, int _ligneAffichage, int _colonneAffichage, int _origneAffichageLigne);
-//
-//void afficherBordSup(Console* _pConsole,  int _nbColonnes, int _ligneAffichage, int _colonneAffichage);
-//
-//void afficherBordInf(Console* _pConsole,  int _nbColonnes, int _ligneAffichage, int _colonneAffichage);
-
-void afficherContenu(Console* _pConsole, Damier* _pDamier);
+    void afficher(Console* _pConsole, Damier* _pDamier);
+    void afficherContenu(Console* _pConsole, Damier* _pDamier);
 }
 
 namespace GfxInfos

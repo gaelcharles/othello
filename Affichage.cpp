@@ -85,12 +85,12 @@ void GfxDamier::afficherContenu(Console* _pConsole, Damier* _pDamier)
             // Affichage du contenu
             switch(_pDamier->getDamier()[i][j])
             {
-            case 'B':
+            case BLANC:
                 _pConsole->setColor(COULEUR_BLANC, COULEUR_VERT);
                 std::cout << 'O';
                 break;
 
-            case 'N':
+            case NOIR:
                 _pConsole->setColor(COULEUR_NOIR, COULEUR_VERT);
                 std::cout << 'O';
                 break;
@@ -103,9 +103,9 @@ void GfxDamier::afficherContenu(Console* _pConsole, Damier* _pDamier)
             default :
                 {
                     std::cout << ' ';
-                    _pConsole->setColor(COULEUR_BLANC, COULEUR_VERT); // Défaut
                 }
             }
+            _pConsole->setColor(COULEUR_BLANC, COULEUR_VERT); // Par défaut
         }
     }
 }
@@ -116,12 +116,12 @@ void GfxInfos::afficherTour(Console* _pConsole, char tour)
     std::cout << "C\'est au tour des";
 
     _pConsole->gotoLigCol(3, 6);
-    if(tour == 'N')
+    if(tour == NOIR)
     {
         _pConsole->setColor(COULEUR_NOIR, COULEUR_VERT);
         std::cout << CARAC_CARRE << " noirs " << CARAC_CARRE;
     }
-    else
+    else if(tour == BLANC)
     {
         _pConsole->setColor(COULEUR_BLANC, COULEUR_VERT);
         std::cout << CARAC_CARRE << " blancs " << CARAC_CARRE;
@@ -133,17 +133,17 @@ void GfxInfos::afficherScore(Console* _pConsole, Damier* _pDamier)
 {
     _pConsole->gotoLigCol(_pDamier->getLigneAffichage()+20, _pDamier->getColonneAffichage()+2);
     _pConsole->setColor(COULEUR_NOIR, COULEUR_VERT);
-    std::cout << CARAC_CARRE << ' ' << _pDamier->comptagePions('N') << " pions noirs";
+    std::cout << CARAC_CARRE << ' ' << _pDamier->comptagePions(NOIR) << " pions noirs";
 
     _pConsole->gotoLigCol(_pDamier->getLigneAffichage()+21, _pDamier->getColonneAffichage()+2);
     _pConsole->setColor(COULEUR_BLANC, COULEUR_VERT);
-    std::cout << CARAC_CARRE << ' ' << _pDamier->comptagePions('B') << " pions blancs";
+    std::cout << CARAC_CARRE << ' ' << _pDamier->comptagePions(BLANC) << " pions blancs";
 }
 
 void GfxFin::afficherFin(Damier* _pDamier)
 {
-    int n = _pDamier->comptagePions('N');
-    int b = _pDamier->comptagePions('B');
+    int n = _pDamier->comptagePions(NOIR);
+    int b = _pDamier->comptagePions(BLANC);
 
     std::cout << "Partie terminee " << std::endl;
 

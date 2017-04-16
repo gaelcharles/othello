@@ -26,7 +26,7 @@ class Damier
         void reset();
         int comptagePions(char _color);
 
-    protected:
+    private:
         //nombre de lignes et de colonnes du damier
         int m_taille;
         //coordonnées auxquelles il faut afficher le damier
@@ -34,9 +34,6 @@ class Damier
         int m_colonneAffichage;
 
         std::vector< std::vector<char> > m_damier; //cases du damier
-
-    private:
-
 };
 
 
