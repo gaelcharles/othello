@@ -1,6 +1,7 @@
 #include "Damier.h"
 #include "console.h"
 #include "Affichage.h"
+#include "Constantes.h"
 
 #include <iostream>
 #include <vector>
@@ -33,227 +34,40 @@ Damier::~Damier()
 
 void Damier::coups(char tour, char adv, int ligne, int colonne)
 {
-    bool boucle=true;
-    int i=ligne, j=colonne;
+    // Référence des déplacements élémentaires selon les directions : N,S,E,W,NE,NW,SE,SW
+    const int directions[8][2] = {{-1,0}, {1,0}, {0,1}, {0,-1}, {-1,1}, {-1,-1}, {1,1}, {1,-1}};
 
-    if(i!=0 && m_damier[i-1][j]==adv)
-    {
-        i--;
-        boucle=true;
-    }
-    else
-    {
-        boucle=false;
-    }
+    // Déplacements élémentaires
+    int dl = 0, dc = 0;
 
+    // Booléen pour stopper la recherche de pions adjacents si le bord du plateau est atteint
+    bool bord_atteint = false;
 
-    while(i>0 && boucle)
+    // Pour chacune des 8 directions
+    for(auto delta : directions)
     {
-        if(m_damier[i-1][j]==adv)
+        bord_atteint = false; // Reset
+        // Mise à jour des déplacements élémentaires
+        dl = delta[0];
+        dc = delta[1];
+
+        if(ligne   + dl >= 0 && ligne   + dl < TAILLE_PLATEAU &&
+           colonne + dc >= 0 && colonne + dc < TAILLE_PLATEAU) // Si la case adjacente est dans le plateau
         {
-            i--;
-        }
-        else
-        {
-            boucle=false;
-            if(m_damier[i-1][j]==tour)
+            // Tant qu'un pion ennemi est adjacent
+            while(m_damier[ligne+dl][colonne+dc] == adv && !bord_atteint)
             {
-                m_damier[ligne][colonne]='.';
-            }
-        }
-    }
+                // Incrémentation des déplacements élémentaires
+                dl += delta[0];
+                dc += delta[1];
 
-    if(i!=m_taille-1 && m_damier[i+1][j]==adv)
-    {
-        i++;
-        boucle=true;
-    }
-    else
-    {
-        boucle=false;
-    }
+                // Si hors du plateau
+                if(ligne+dl < 0 || ligne+dl >= TAILLE_PLATEAU || colonne+dc < 0 || colonne+dc >= TAILLE_PLATEAU)
+                    bord_atteint = true;
 
-    while(i<m_taille-1 && boucle)
-    {
-        if(m_damier[i+1][j]==adv)
-        {
-            i++;
-        }
-        else
-        {
-            boucle=false;
-            if(m_damier[i+1][j]==tour)
-            {
-                m_damier[ligne][colonne]='.';
-            }
-        }
-    }
-
-    if(j!=0 && m_damier[i][j-1]==adv)
-    {
-        j--;
-        boucle=true;
-    }
-    else
-    {
-        boucle=false;
-    }
-
-    while(j>0 && boucle)
-    {
-        if(m_damier[i][j-1]==adv)
-        {
-            j--;
-        }
-        else
-        {
-            boucle=false;
-            if(m_damier[i][j-1]==tour)
-            {
-                m_damier[ligne][colonne]='.';
-            }
-        }
-    }
-
-    if(j!=m_taille-1 && m_damier[i][j+1]==adv)
-    {
-        j++;
-        boucle=true;
-    }
-    else
-    {
-        boucle=false;
-    }
-
-
-    while(j<m_taille-1 && boucle)
-    {
-        if(m_damier[i][j+1]==adv)
-        {
-            j++;
-        }
-        else
-        {
-            boucle=false;
-            if(m_damier[i][j+1]==tour)
-            {
-                m_damier[ligne][colonne]='.';
-            }
-        }
-    }
-
-    if(i!=0 && j!=0 && m_damier[i-1][j-1]==adv)
-    {
-        i--;
-        j--;
-        boucle=true;
-    }
-    else
-    {
-        boucle=false;
-    }
-
-
-    while(i>0 && j>0 && boucle)
-    {
-        if(m_damier[i-1][j-1]==adv)
-        {
-            i--;
-            j--;
-        }
-        else
-        {
-            boucle=false;
-            if(m_damier[i-1][j-1]==tour)
-            {
-                m_damier[ligne][colonne]='.';
-            }
-        }
-    }
-
-    if(i!=0 && j!=m_taille-1 && m_damier[i-1][j+1]==adv)
-    {
-        i--;
-        j++;
-        boucle=true;
-    }
-    else
-    {
-        boucle=false;
-    }
-
-
-    while(i>0 && j<m_taille-1 && boucle)
-    {
-        if(m_damier[i-1][j+1]==adv)
-        {
-            i--;
-            j++;
-        }
-        else
-        {
-            boucle=false;
-            if(m_damier[i-1][j+1]==tour)
-            {
-                m_damier[ligne][colonne]='.';
-            }
-        }
-    }
-
-    if(i!=m_taille-1 && j!=0 && m_damier[i+1][j-1]==adv)
-    {
-        i++;
-        j--;
-        boucle=true;
-    }
-    else
-    {
-        boucle=false;
-    }
-
-
-    while(i<m_taille-1 && j>0 && boucle)
-    {
-        if(m_damier[i+1][j-1]==adv)
-        {
-            i++;
-            j--;
-        }
-        else
-        {
-            boucle=false;
-            if(m_damier[i+1][j-1]==tour)
-            {
-                m_damier[ligne][colonne]='.';
-            }
-        }
-    }
-
-    if(i!=m_taille-1 && j!=m_taille-1 && m_damier[i+1][j+1]==adv)
-    {
-        i++;
-        j++;
-        boucle=true;
-    }
-    else
-    {
-        boucle=false;
-    }
-
-
-    while(i<m_taille-1 && j<m_taille-1 && boucle)
-    {
-        if(m_damier[i+1][j+1]==adv)
-        {
-            i++;
-            j++;
-        }
-        else
-        {
-            boucle=false;
-            if(m_damier[i+1][j+1]==tour)
-            {
-                m_damier[ligne][colonne]='.';
+                // Si la case d'après est vide, c'est un coup jouable
+                else if(m_damier[ligne+dl][colonne+dc] == ' ')
+                    m_damier[ligne+dl][colonne+dc] = '.';
             }
         }
     }

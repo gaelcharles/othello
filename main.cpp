@@ -13,8 +13,8 @@ int main()
     /// DECLARATION DE LA CONSOLE D'AFFICHAGE
     Console* pConsole = NULL;
 
-    Damier* damier = new Damier(8, LIGNE_AFFICHAGE, COLONNE_AFFICHAGE);
-    char tour='N', adv='B';
+    Damier* damier = new Damier(TAILLE_PLATEAU, LIGNE_AFFICHAGE, COLONNE_AFFICHAGE);
+    char tour=NOIR, adv=BLANC;
     bool ok;
 
     pConsole = Console::getInstance();
@@ -26,20 +26,18 @@ int main()
     bool quitter = false;
     bool verif=false;
 
+    // Passe la console en texte blanc sur fond vert
     pConsole->setColor(COULEUR_BLANC, COULEUR_VERT);
     system("cls");
 
-    // NOUVELLE MODIF DE OUF
-
     while(!quitter)
     {
-
-        for(int i=0;i<damier->getTaille();i++)
+        for(int i=0 ; i<damier->getTaille() ; i++)
         {
-            for(int j=0;j<damier->getTaille();j++)
+            for(int j=0 ; j<damier->getTaille() ; j++)
             {
-                if(damier->getDamier()[i][j]==' ')
-                    damier->coups(tour,adv,i,j);
+                if(damier->getDamier()[i][j] == tour)
+                    damier->coups(tour, adv, i, j);
             }
         }
 
@@ -66,15 +64,15 @@ int main()
             }
         }
 
-        if(tour=='B')
+        if(tour==BLANC)
         {
-             tour='N';
-             adv='B';
+             tour=NOIR;
+             adv=BLANC;
         }
         else
         {
-             tour='B';
-             adv='N';
+             tour=BLANC;
+             adv=NOIR;
         }
 
     }
