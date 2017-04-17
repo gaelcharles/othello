@@ -12,10 +12,9 @@ class Damier
         ~Damier();
 
         //getters
-        int getTaille() { return m_taille; }
-
-        int getLigneAffichage() { return m_ligneAffichage; }
-        int getColonneAffichage() { return m_colonneAffichage; }
+        int getTaille() const { return m_taille; }
+        int getLigneAffichage() const { return m_ligneAffichage; }
+        int getColonneAffichage() const { return m_colonneAffichage; }
 
         std::vector< std::vector<char> > getDamier() { return m_damier; }
 

@@ -18,9 +18,11 @@ void GfxDamier::afficher(Console* _pConsole, Damier* _pDamier)
  *                                                                                            *
  **********************************************************************************************/
 {
-    // Variables
+    // Variables constantes
     const int origineLig = _pDamier->getLigneAffichage();
     const int origineCol = _pDamier->getColonneAffichage();
+    const int dep_lig[] = {-1, 2*TAILLE_PLATEAU+1};
+    const int dep_col[] = {-3, 4*TAILLE_PLATEAU+2};
 
     // Positionnement initial
     _pConsole->gotoLigCol(origineLig, origineCol);
@@ -53,11 +55,35 @@ void GfxDamier::afficher(Console* _pConsole, Damier* _pDamier)
         }
     }
     // Dernière ligne de bordures
-    _pConsole->gotoLigCol(origineLig+2*_pDamier->getTaille(), origineCol); // Retour à la ligne
+    _pConsole->gotoLigCol(origineLig+2*TAILLE_PLATEAU, origineCol); // Retour à la ligne
     std::cout << BORDURE_ANGLE_BG << BORDURE_BARRE_HORZ << BORDURE_BARRE_HORZ << BORDURE_BARRE_HORZ;
     for(int i(0) ; i<_pDamier->getTaille()-1 ; i++)
         std::cout << BORDURE_INTER3_HAUT << BORDURE_BARRE_HORZ << BORDURE_BARRE_HORZ << BORDURE_BARRE_HORZ;
     std::cout << BORDURE_ANGLE_BD;
+
+    // Coordonnées des cases sur les bordures
+    _pConsole->setColor(COULEUR_BLANC, COULEUR_MARRON);
+    for(int dl : dep_lig)
+    {
+        _pConsole->gotoLigCol(origineLig+dl, origineCol-3);
+        std::cout << "    ";
+        for(int c(0) ; c<TAILLE_PLATEAU ; c++)
+            std::cout << " " << char('A'+c) << "  ";
+        std::cout << "   ";
+    }
+    for(int dc : dep_col)
+    {
+        for(int c(1) ; c<=2*TAILLE_PLATEAU+1 ; c++)
+        {
+            _pConsole->gotoLigCol(origineLig+c-1, origineCol+dc);
+            if(dc == -3)
+                c%2==0 ? std::cout << ' ' << (c+1)/2 : std::cout << "  ";
+            else
+                c%2==0 ? std::cout << (c+1)/2 << ' ' : std::cout << "  ";
+        }
+    }
+
+    _pConsole->setColor(COULEUR_BLANC, COULEUR_VERT);
 }
 
 void GfxDamier::afficherContenu(Console* _pConsole, Damier* _pDamier)
@@ -111,15 +137,24 @@ void GfxDamier::afficherContenu(Console* _pConsole, Damier* _pDamier)
 }
 
 void GfxInfos::afficherTour(Console* _pConsole, char tour)
+/**********************************************************************************************
+ * \brief afficherTour : indique quel joueur doit jouer ce tour                               *
+ * \author Camille                                                                            *
+ *                                                                                            *
+ * \param _pConsole : Pointeur sur l'instance de console                                      *
+ * \param tour : tour de jeu                                                                  *
+ * \return (void)                                                                             *
+ *                                                                                            *
+ **********************************************************************************************/
 {
-    _pConsole->gotoLigCol(2, 6);
+    _pConsole->gotoLigCol(1, 6);
     std::cout << "C\'est au tour des";
 
-    _pConsole->gotoLigCol(3, 6);
+    _pConsole->gotoLigCol(2, 6);
     if(tour == NOIR)
     {
         _pConsole->setColor(COULEUR_NOIR, COULEUR_VERT);
-        std::cout << CARAC_CARRE << " noirs " << CARAC_CARRE;
+        std::cout << CARAC_CARRE << " noirs " << CARAC_CARRE << ' ';
     }
     else if(tour == BLANC)
     {
@@ -148,20 +183,54 @@ void GfxFin::afficherFin(Damier* _pDamier)
     std::cout << "Partie terminee " << std::endl;
 
     if(n > b)
-    {
         std::cout << "Les pions noirs gagnent !" << std::endl;
-        system("pause");
-    }
     else if(n < b)
-    {
         std::cout << "Les pions blancs gagnent !" << std::endl;
-        system("pause");
-    }
     else
-    {
         std::cout << "Match nul !" << std::endl;
-        system("pause");
+    system("pause");
+}
+
+int GfxMenu::afficher(Console* _pConsole, IA* _bot)
+{
+    // Variables
+    int choix = 0, difficulte = 0;
+
+    // Passe la console en texte noir sur fond blanc
+    _pConsole->setColor(COULEUR_NOIR, COULEUR_BLANC);
+    system("cls");
+
+    _pConsole->gotoLigCol(2, 0);
+    std::cout << "          ___  _   _          _ _\n         / _ \\| |_| |__   ___| | | ___\n        | | | | __|  _ \\ / _ \\ | |/ _ \\\n        | |_| | |_| | | |  __/ | | (_) |\n         \\___/ \\__|_| |_|\\___|_|_|\\___/";
+    _pConsole->gotoLigCol(9, 11);
+    std::cout << "1. Partie un joueur";
+    _pConsole->gotoLigCol(10, 11);
+    std::cout << "2. Partie deux joueurs";
+    _pConsole->gotoLigCol(11, 11);
+    std::cout << "3. Quitter";
+
+    do
+    {
+        _pConsole->gotoLigCol(12, 11);
+        std::cin >> choix;
+    }while(choix != 1 && choix != 2 && choix != 3);
+
+    if(choix == 1) // IA
+    {
+        system("cls");
+        _pConsole->gotoLigCol(2, 0);
+        std::cout << "          ___  _   _          _ _\n         / _ \\| |_| |__   ___| | | ___\n        | | | | __|  _ \\ / _ \\ | |/ _ \\\n        | |_| | |_| | | |  __/ | | (_) |\n         \\___/ \\__|_| |_|\\___|_|_|\\___/";
+        _pConsole->gotoLigCol(9, 11);
+        std::cout << "1. Facile";
+        // 2. Moyen, 3. Difficile
+        do
+        {
+            _pConsole->gotoLigCol(11, 11);
+            std::cin >> difficulte;
+        }while(difficulte != 1);
+
+        _bot->setDifficulte(difficulte);
     }
 
-
+    return choix;
 }

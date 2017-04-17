@@ -40,13 +40,9 @@ void Damier::coups(char tour, char adv, int ligne, int colonne)
     // Déplacements élémentaires
     int dl = 0, dc = 0;
 
-    // Booléen pour stopper la recherche de pions adjacents si le bord du plateau est atteint
-    bool bord_atteint = false;
-
     // Pour chacune des 8 directions
     for(auto delta : directions)
     {
-        bord_atteint = false; // Reset
         // Mise à jour des déplacements élémentaires
         dl = delta[0];
         dc = delta[1];
@@ -55,15 +51,15 @@ void Damier::coups(char tour, char adv, int ligne, int colonne)
            colonne + dc >= 0 && colonne + dc < TAILLE_PLATEAU) // Si la case adjacente est dans le plateau
         {
             // Tant qu'un pion ennemi est adjacent
-            while(m_damier[ligne+dl][colonne+dc] == adv && !bord_atteint)
+            while(m_damier[ligne+dl][colonne+dc] == adv)
             {
                 // Incrémentation des déplacements élémentaires
                 dl += delta[0];
                 dc += delta[1];
 
-                // Si hors du plateau
+                // Si hors du plateau, on sort de la boucle directement
                 if(ligne+dl < 0 || ligne+dl >= TAILLE_PLATEAU || colonne+dc < 0 || colonne+dc >= TAILLE_PLATEAU)
-                    bord_atteint = true;
+                    break;
 
                 // Si la case d'après est vide, c'est un coup jouable
                 else if(m_damier[ligne+dl][colonne+dc] == ' ')
