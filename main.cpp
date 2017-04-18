@@ -18,7 +18,6 @@ int main()
     Damier* damier = new Damier(TAILLE_PLATEAU, LIGNE_AFFICHAGE, COLONNE_AFFICHAGE);
     char tour=NOIR, adv=BLANC;
     const int origineCurseur = 7;
-    const int finCurseur = 11;
     bool quitter = false;
     bool verif=false;
     int choix;
@@ -66,6 +65,7 @@ int main()
                 pConsole->gotoLigCol(0,0);
                 std::cout << "Aucun coup possible, vous passez votre tour !" << std::endl ;
                 system("pause");
+                system("cls");
                 verif=true;
             }
             else
