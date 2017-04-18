@@ -2,29 +2,32 @@
 #include "console.h"
 #include "Affichage.h"
 #include "Evenements.h"
+#include "IA.h"
 
 #include <iostream>
 #include <Windows.h>
-#include <MMsystem.h>
+#include <MMsystem.h> // ???
 
 
 int main()
 {
-    /// DECLARATION DE LA CONSOLE D'AFFICHAGE
-    Console* pConsole = NULL;
+    srand(time(NULL));
 
+    // Variables
+    Console* pConsole = NULL;
     Damier* damier = new Damier(TAILLE_PLATEAU, LIGNE_AFFICHAGE, COLONNE_AFFICHAGE);
     char tour=NOIR, adv=BLANC;
-    bool ok;
+    const int origineCurseur = 7;
+    const int finCurseur = 11;
+    bool quitter = false;
+    bool verif=false;
+    int choix;
+    IA* bot = new IA;
 
     pConsole = Console::getInstance();
 
-    const int origineCurseur = 7;
-    const int finCurseur = 11;
-
-
-    bool quitter = false;
-    bool verif=false;
+    choix = GfxMenu::afficher(pConsole, bot);
+    if(choix == 3) exit(0);
 
     // Passe la console en texte blanc sur fond vert
     pConsole->setColor(COULEUR_BLANC, COULEUR_VERT);
@@ -32,6 +35,7 @@ int main()
 
     while(!quitter)
     {
+        // On cherche les coups jouables
         for(int i=0 ; i<damier->getTaille() ; i++)
         {
             for(int j=0 ; j<damier->getTaille() ; j++)
@@ -41,13 +45,19 @@ int main()
             }
         }
 
-        ok=Partie::verification(damier);
-
-        if(ok)
+        if(Partie::verification(damier))
         {
-            verif=false;
-            pConsole->gotoLigCol(origineCurseur,8);
-            quitter=Partie::deroulement(pConsole, damier, tour, adv);
+            verif = false;
+            pConsole->gotoLigCol(origineCurseur, 8);
+            if(choix == 2) // Deux joueurs
+                quitter=Partie::deroulement(pConsole, damier, tour, adv);
+            else if(choix == 1) // Un joueur
+            {
+                if(tour == BLANC) // Tour de l'IA
+                    quitter = bot->deroulement(pConsole, damier, tour, adv);
+                else
+                    quitter = Partie::deroulement(pConsole, damier, tour, adv);
+            }
         }
         else
         {
@@ -77,8 +87,9 @@ int main()
 
     }
 
+    // Fin de partie
     GfxFin::afficherFin(damier);
     Console::deleteInstance();
-
+    delete damier;
     return 0;
 }

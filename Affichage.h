@@ -1,9 +1,8 @@
 #include "Console.h"
 #include "Damier.h"
+#include "IA.h"
 
 #include <iostream>
-#include <stack>
-
 
 namespace GfxDamier
 {
@@ -20,4 +19,9 @@ namespace GfxInfos
 namespace GfxFin
 {
     void afficherFin(Damier* _pDamier);
+}
+
+namespace GfxMenu
+{
+    int afficher(Console* _pConsole, IA* _bot);
 }

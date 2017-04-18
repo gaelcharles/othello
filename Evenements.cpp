@@ -50,8 +50,6 @@ void Curseur::deplacer(char _key, int& _ligneCurseurDamier, int& _colonneCurseur
 
 bool Partie::deroulement(Console* pConsole, Damier* damier, char tour, char adv)
 {
-
-
     /// DECLARATION DES VARIABLES D'AFFICHAGE DU CURSEUR DU DAMIER
 
     //initialisation des valeurs constantes du sous-programme
@@ -106,18 +104,13 @@ bool Partie::deroulement(Console* pConsole, Damier* damier, char tour, char adv)
                 pConsole->gotoLigCol(ligneCurseurAffichage, colonneCurseurAffichage);
             }
 
-            if(touche==13)
+            if(touche==13 && damier->getDamier()[ligneCurseurDamier][colonneCurseurDamier]=='.')
             {
-                if(damier->getDamier()[ligneCurseurDamier][colonneCurseurDamier]=='.')
-                {
-                    damier->changement(tour, adv, ligneCurseurDamier, colonneCurseurDamier);
-                    quitter=true;
-                    damier->reset();
-                    rafraichirEcran = true;
-
-                }
+                damier->changement(tour, adv, ligneCurseurDamier, colonneCurseurDamier);
+                quitter=true;
+                damier->reset();
+                rafraichirEcran = true;
             }
-
         }
 
         if(rafraichirEcran)
@@ -140,17 +133,19 @@ return false;
 
 bool Partie::verification(Damier* damier)
 {
-    bool ok=false;
+    bool ok = false;
 
-    for(int i=0;i<damier->getTaille();i++)
+    for(int i=0 ; i<damier->getTaille() ; i++)
     {
-        for(int j=0;j<damier->getTaille();j++)
+        for(int j=0 ; j<damier->getTaille() ; j++)
         {
-            if(damier->getDamier()[i][j]=='.')
+            if(damier->getDamier()[i][j] == '.')
             {
-                ok=true;
+                ok = true;
+                break;
             }
         }
+        if(ok) break;
     }
 
     return ok;

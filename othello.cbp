@@ -30,6 +30,7 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add option="-std=c++11" />
 			<Add option="-fexceptions" />
 		</Compiler>
 		<Unit filename="Affichage.cpp" />
@@ -41,6 +42,8 @@
 		<Unit filename="Damier.h" />
 		<Unit filename="Evenements.cpp" />
 		<Unit filename="Evenements.h" />
+		<Unit filename="IA.cpp" />
+		<Unit filename="IA.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
