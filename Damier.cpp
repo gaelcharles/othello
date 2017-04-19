@@ -64,7 +64,7 @@ void Damier::coups(char tour, char adv, int ligne, int colonne)
 
                 // Si la case d'après est vide, c'est un coup jouable
                 else if(m_damier[ligne+dl][colonne+dc] == ' ')
-                    m_damier[ligne+dl][colonne+dc] = '.';
+                    m_damier[ligne+dl][colonne+dc] = COUP_JOUABLE;
             }
         }
     }
@@ -78,221 +78,61 @@ void Damier::afficher(Console* _pConsole)
 
 void Damier::changement(char tour, char adv, int ligne, int colonne)
 {
-    m_damier[ligne][colonne]=tour;
-    int i=ligne, j=colonne;
-    std::vector<int> lig;
-    std::vector<int> col;
+    // Référence des déplacements élémentaires selon les directions : N,S,E,W,NE,NW,SE,SW
+    const int directions[8][2] = {{-1,0}, {1,0}, {0,1}, {0,-1}, {-1,1}, {-1,-1}, {1,1}, {1,-1}};
 
-    if(ligne+1<m_taille && m_damier[ligne+1][colonne]==adv)
+    // Déplacements élémentaires & coordonnées
+    int dl = 0, dc = 0, x = 0, y = 0;
+
+    // Vecteur indiquant les pions à retourner
+    std::vector<std::vector<int> > pions_a_retourner;
+
+    // Vecteur tampon
+    std::vector<int> coords;
+
+    // On place un pion sur la case sélectionnée
+    m_damier[ligne][colonne] = tour;
+
+    // Pour chacune des 8 directions
+    for(auto delta : directions)
     {
-        i++;
-        while(i<m_taille && m_damier[i][j]==adv)
+        // Mise à jour des déplacements élémentaires
+        dl = delta[0];
+        dc = delta[1];
+
+        if(ligne   + dl >= 0 && ligne   + dl < TAILLE_PLATEAU &&
+           colonne + dc >= 0 && colonne + dc < TAILLE_PLATEAU) // Si la case adjacente est dans le plateau
         {
-            lig.push_back(i);
-            col.push_back(j);
-            i++;
-        }
-        if(i<m_taille && m_damier[i][j]==tour)
-        {
-            for(int k=0;k<lig.size();k++)
+            // Tant qu'un pion ennemi est adjacent
+            while(m_damier[ligne+dl][colonne+dc] == adv)
             {
-                m_damier[lig[k]][col[k]]=tour;
+                // On retient les coordonnées du pion adjacent pour changer sa couleur plus tard
+                coords.push_back(ligne+dl);
+                coords.push_back(colonne+dc);
+                pions_a_retourner.push_back(coords);
+                coords.clear();
+
+                // Incrémentation des déplacements élémentaires
+                dl += delta[0];
+                dc += delta[1];
+
+                // Si hors du plateau, on sort de la boucle
+                if(ligne+dl < 0 || ligne+dl >= TAILLE_PLATEAU || colonne+dc < 0 || colonne+dc >= TAILLE_PLATEAU)
+                    break;
+
+                // Si la case d'après est un pion allié, on change de couleur les pions alignés
+                else if(m_damier[ligne+dl][colonne+dc] == tour)
+                {
+                    for(unsigned int id(0) ; id<pions_a_retourner.size() ; id++)
+                    {
+                        x = pions_a_retourner[id][0];
+                        y = pions_a_retourner[id][1];
+                        m_damier[x][y] = tour; // La couleur du pion devient celle du joueur dont c'est le tour
+                    }
+                }
             }
-        }
-        for(int k=0;k<lig.size();k++)
-        {
-            lig.pop_back();
-            col.pop_back();
-        }
-    }
-
-    i=ligne;
-    j=colonne;
-
-    if(colonne+1<m_taille && m_damier[ligne][colonne+1]==adv)
-    {
-        j++;
-        while(j<m_taille && m_damier[i][j]==adv)
-        {
-            lig.push_back(i);
-            col.push_back(j);
-            j++;
-        }
-        if(j<m_taille && m_damier[i][j]==tour)
-        {
-            for(int k=0;k<lig.size();k++)
-            {
-                m_damier[lig[k]][col[k]]=tour;
-            }
-        }
-        for(int k=0;k<lig.size();k++)
-        {
-            lig.pop_back();
-            col.pop_back();
-        }
-    }
-
-    i=ligne;
-    j=colonne;
-
-    if(ligne-1>=0 && m_damier[ligne-1][colonne]==adv)
-    {
-        i--;
-        while(i>=0 && m_damier[i][j]==adv)
-        {
-            lig.push_back(i);
-            col.push_back(j);
-            i--;
-        }
-        if(i>=0 && m_damier[i][j]==tour)
-        {
-            for(int k=0;k<lig.size();k++)
-            {
-                m_damier[lig[k]][col[k]]=tour;
-            }
-        }
-        for(int k=0;k<lig.size();k++)
-        {
-            lig.pop_back();
-            col.pop_back();
-        }
-    }
-
-    i=ligne;
-    j=colonne;
-
-    if(colonne-1>=0 && m_damier[ligne][colonne-1]==adv)
-    {
-        j--;
-        while(j>=0 && m_damier[i][j]==adv)
-        {
-            lig.push_back(i);
-            col.push_back(j);
-            j--;
-        }
-        if(j>=0 && m_damier[i][j]==tour)
-        {
-            for(int k=0;k<lig.size();k++)
-            {
-                m_damier[lig[k]][col[k]]=tour;
-            }
-        }
-        for(int k=0;k<lig.size();k++)
-        {
-            lig.pop_back();
-            col.pop_back();
-        }
-    }
-
-    i=ligne;
-    j=colonne;
-
-    if(ligne+1<m_taille && colonne+1<m_taille && m_damier[ligne+1][colonne+1]==adv)
-    {
-        i++;
-        j++;
-        while(i<m_taille && j<m_taille && m_damier[i][j]==adv)
-        {
-            lig.push_back(i);
-            col.push_back(j);
-            i++;
-            j++;
-        }
-        if(i<m_taille && j<m_taille && m_damier[i][j]==tour)
-        {
-            for(int k=0;k<lig.size();k++)
-            {
-                m_damier[lig[k]][col[k]]=tour;
-            }
-        }
-        for(int k=0;k<lig.size();k++)
-        {
-            lig.pop_back();
-            col.pop_back();
-        }
-    }
-
-    i=ligne;
-    j=colonne;
-
-    if(ligne-1>=0 && colonne+1<m_taille && m_damier[ligne-1][colonne+1]==adv)
-    {
-        i--;
-        j++;
-        while(i>=0 && j<m_taille && m_damier[i][j]==adv)
-        {
-            lig.push_back(i);
-            col.push_back(j);
-            i--;
-            j++;
-        }
-        if(i>=0 && j<m_taille && m_damier[i][j]==tour)
-        {
-            for(int k=0;k<lig.size();k++)
-            {
-                m_damier[lig[k]][col[k]]=tour;
-            }
-        }
-        for(int k=0;k<lig.size();k++)
-        {
-            lig.pop_back();
-            col.pop_back();
-        }
-    }
-
-    i=ligne;
-    j=colonne;
-
-    if(ligne+1<m_taille && colonne-1>=0 && m_damier[ligne+1][colonne-1]==adv)
-    {
-        i++;
-        j--;
-        while(i<m_taille && j>=0 && m_damier[i][j]==adv)
-        {
-            lig.push_back(i);
-            col.push_back(j);
-            i++;
-            j--;
-        }
-        if(i<m_taille && j>=0 && m_damier[i][j]==tour)
-        {
-            for(int k=0;k<lig.size();k++)
-            {
-                m_damier[lig[k]][col[k]]=tour;
-            }
-        }
-        for(int k=0;k<lig.size();k++)
-        {
-            lig.pop_back();
-            col.pop_back();
-        }
-    }
-
-    i=ligne;
-    j=colonne;
-
-    if(ligne-1>=0 && colonne-1>=0 && m_damier[ligne-1][colonne-1]==adv)
-    {
-        i--;
-        j--;
-        while(i>=0 && j>=0 && m_damier[i][j]==adv)
-        {
-            lig.push_back(i);
-            col.push_back(j);
-            i--;
-            j--;
-        }
-        if(i>=0 && j>=0 && m_damier[i][j]==tour)
-        {
-            for(int k=0;k<lig.size();k++)
-            {
-                m_damier[lig[k]][col[k]]=tour;
-            }
-        }
-        for(int k=0;k<lig.size();k++)
-        {
-            lig.pop_back();
-            col.pop_back();
+            // Reset quand on sort du while
+            pions_a_retourner.clear();
         }
     }
 }
@@ -303,7 +143,7 @@ void Damier::reset()
     {
         for(int j=0;j<m_taille;j++)
         {
-            if(m_damier[i][j]=='.')
+            if(m_damier[i][j]==COUP_JOUABLE)
             {
                 m_damier[i][j]=' ';
             }

@@ -122,9 +122,9 @@ void GfxDamier::afficherContenu(Console* _pConsole, Damier* _pDamier)
                 std::cout << 'O';
                 break;
 
-            case '.':
+            case COUP_JOUABLE:
                 _pConsole->setColor(COULEUR_MARRON, COULEUR_VERT);
-                std::cout << '.';
+                std::cout << COUP_JOUABLE;
                 break;
 
             default :

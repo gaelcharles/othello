@@ -105,7 +105,7 @@ int Partie::deroulement(int mode, Console* pConsole, Damier* damier, char tour, 
                 pConsole->gotoLigCol(ligneCurseurAffichage, colonneCurseurAffichage);
             }
 
-            if(touche==13 && damier->getDamier()[ligneCurseurDamier][colonneCurseurDamier]=='.')
+            if(touche==13 && damier->getDamier()[ligneCurseurDamier][colonneCurseurDamier]==COUP_JOUABLE)
             {
                 damier->changement(tour, adv, ligneCurseurDamier, colonneCurseurDamier);
                 continuerTour=false;
@@ -158,7 +158,7 @@ bool Partie::verification(Damier* damier)
     {
         for(int j=0 ; j<damier->getTaille() ; j++)
         {
-            if(damier->getDamier()[i][j] == '.')
+            if(damier->getDamier()[i][j] == COUP_JOUABLE)
             {
                 ok = true;
                 break;

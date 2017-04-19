@@ -1,5 +1,6 @@
 #include "IA.h"
 #include "Affichage.h"
+#include "Constantes.h"
 #include <cstdlib>
 #include <windows.h>
 
@@ -40,7 +41,7 @@ std::vector<int> IA::ChooseRandomCell(Damier* _pDamier)
     {
         for(int j(0) ; j<_pDamier->getTaille() ; j++)
         {
-            if(_pDamier->getDamier()[i][j] == '.') // Si un coup est jouable sur cette case
+            if(_pDamier->getDamier()[i][j] == COUP_JOUABLE) // Si un coup est jouable sur cette case
             {
                 tampon.push_back(i);
                 tampon.push_back(j);
@@ -50,7 +51,7 @@ std::vector<int> IA::ChooseRandomCell(Damier* _pDamier)
         }
     }
 
-    return liste[rand() % (liste.size())];
+    return liste[rand() % (liste.size())]; // Un coup jouable aléatoire parmi tous ceux de la liste
 }
 
 bool IA::deroulement(Console* _pConsole, Damier* _pDamier, char _tour, char _adv)
@@ -75,14 +76,22 @@ bool IA::deroulement(Console* _pConsole, Damier* _pDamier, char _tour, char _adv
     std::cout << "L'IA reflechit";
     for(int i(0) ; i<3 ; i++)
     {
-        Sleep(300);
+        Sleep(200);
         std::cout << '.';
     }
-    _pConsole->gotoLigCol(2*cell[0]+_pDamier->getLigneAffichage()+1, 4*cell[1]+_pDamier->getColonneAffichage()+1);
-    _pConsole->setColor(COULEUR_MARRON, COULEUR_VERT_CLAIR);
-    std::cout << " . ";
+
+    // Le pion clignote juste avant d'être joué par l'IA
+    for(int i(0) ; i<4 ; i++)
+    {
+        _pConsole->gotoLigCol(2*cell[0]+_pDamier->getLigneAffichage()+1, 4*cell[1]+_pDamier->getColonneAffichage()+1);
+        _pConsole->setColor(COULEUR_BLANC, COULEUR_VERT);
+        (i%2 == 0) ? std::cout << " O " : std::cout << "   ";
+        _pConsole->gotoLigCol(12, 62);
+        Sleep(250);
+    }
+
+    // Effacement de la réflexion de l'IA
     _pConsole->gotoLigCol(12, 45);
-    Sleep(500);
     _pConsole->setColor(COULEUR_BLANC, COULEUR_VERT);
     std::cout << "                 ";
 

@@ -18,8 +18,10 @@ int main()
     Damier* damier = new Damier(TAILLE_PLATEAU, LIGNE_AFFICHAGE, COLONNE_AFFICHAGE);
     char tour=NOIR, adv=BLANC;
     const int origineCurseur = 7;
+    bool quitter = false;
     const int finCurseur = 11;
     int quitter = 0;
+
     bool verif=false;
     int choix;
     IA* bot = new IA;
@@ -66,6 +68,7 @@ int main()
                 pConsole->gotoLigCol(0,0);
                 std::cout << "Aucun coup possible, vous passez votre tour !" << std::endl ;
                 system("pause");
+                system("cls");
                 verif=true;
             }
             else
@@ -88,7 +91,7 @@ int main()
     }
 
     // Fin de partie
-    //Si la partie se termine parce que l'un des deux a gagné, on affiche le score
+    //Si la partie se termine parce que l'un des deux a gagnÃ©, on affiche le score
     if(quitter == 1) GfxFin::afficherFin(damier);
     Console::deleteInstance();
     delete damier;
