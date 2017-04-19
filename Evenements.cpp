@@ -48,7 +48,7 @@ void Curseur::deplacer(char _key, int& _ligneCurseurDamier, int& _colonneCurseur
     }
 }
 
-bool Partie::deroulement(Console* pConsole, Damier* damier, char tour, char adv)
+int Partie::deroulement(int mode, Console* pConsole, Damier* damier, char tour, char adv)
 {
     /// DECLARATION DES VARIABLES D'AFFICHAGE DU CURSEUR DU DAMIER
 
@@ -83,11 +83,12 @@ bool Partie::deroulement(Console* pConsole, Damier* damier, char tour, char adv)
     colonneCurseurAffichage = origineCurseurColonne;
 
     bool rafraichirEcran = true; //pour rentrer dès le début dans la boucle d'affichage
-    bool quitter=false;
+    bool continuerTour=true;
+    int quitter = 0;
 
     GfxDamier::afficher(pConsole, damier);
 
-    while(!quitter)
+    while(continuerTour)
     {
         // GESTIONS DES EVENEMENTS CLAVIER
         if(pConsole->isKeyboardPressed())
@@ -107,9 +108,27 @@ bool Partie::deroulement(Console* pConsole, Damier* damier, char tour, char adv)
             if(touche==13 && damier->getDamier()[ligneCurseurDamier][colonneCurseurDamier]=='.')
             {
                 damier->changement(tour, adv, ligneCurseurDamier, colonneCurseurDamier);
-                quitter=true;
+                continuerTour=false;
                 damier->reset();
                 rafraichirEcran = true;
+            }
+
+            if(touche == 27) //si appuie sur ECHAP
+            {
+                //ouvre le menu ECHAP
+                quitter=GfxMenu::echap(pConsole, mode, damier);
+
+                //si le joueur veut quitter
+                if(quitter)
+                {
+                    continuerTour=false;
+                    rafraichirEcran=false;
+                }
+                else //s'il veut juste reprendre le jeu
+                {
+                    continuerTour=true;
+                    rafraichirEcran=true;
+                }
             }
         }
 
@@ -119,7 +138,7 @@ bool Partie::deroulement(Console* pConsole, Damier* damier, char tour, char adv)
 
             GfxInfos::afficherTour(pConsole, tour);
             GfxInfos::afficherScore(pConsole, damier);
-            GfxDamier::afficherContenu(pConsole, damier);
+            damier->afficher(pConsole);
 
             pConsole->gotoLigCol(ligneCurseurAffichage, colonneCurseurAffichage);
 
@@ -128,7 +147,7 @@ bool Partie::deroulement(Console* pConsole, Damier* damier, char tour, char adv)
     }
     system("cls");
 
-return false;
+return quitter;
 }
 
 bool Partie::verification(Damier* damier)
@@ -149,4 +168,32 @@ bool Partie::verification(Damier* damier)
     }
 
     return ok;
+}
+
+void Partie::sauvegarde(Damier* d, int mode)
+{
+
+    std::ofstream fichier("partie.txt", std::ios::out | std::ios::trunc);
+
+    if(fichier)
+    {
+        d->reset();
+        fichier << mode << " " << d->getTaille() << std::endl;
+        for(int i=0; i<d->getTaille() ; i++)
+        {
+            for(int j=0; j<d->getTaille(); j++)
+            {
+                if(d->getDamier()[i][j]!=' ')
+                    fichier << d->getDamier()[i][j] << " " ;
+                else
+                    fichier << '0' << " ";
+            }
+            fichier << std::endl;
+        }
+        fichier.close();
+    }
+    else
+    {
+        std::cerr << "Impossible" << std::endl;
+    }
 }
