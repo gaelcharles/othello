@@ -9,6 +9,7 @@
 #include <iostream>
 #include <windows.h>
 #include <time.h>
+#include <fstream>
 
 namespace Curseur
 {
@@ -19,8 +20,10 @@ namespace Curseur
 
 namespace Partie
 {
-    bool deroulement(Console* pConsole, Damier* damier, char tour, char adv);
+    int deroulement(int mode, Console* pConsole, Damier* damier, char tour, char adv);
     bool verification(Damier* damier);
+    void sauvegarde(Damier* d, int mode);
+
 }
 
 

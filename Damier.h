@@ -24,6 +24,7 @@ class Damier
         void changement(char tour, char adv, int ligne, int colonne);
         void reset();
         int comptagePions(char _color);
+        int chargement();
 
     private:
         //nombre de lignes et de colonnes du damier
