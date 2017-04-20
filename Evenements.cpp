@@ -1,5 +1,4 @@
 #include <conio.h>
-#include <time.h>
 
 #include "Evenements.h"
 
@@ -48,7 +47,7 @@ void Curseur::deplacer(char _key, int& _ligneCurseurDamier, int& _colonneCurseur
     }
 }
 
-int Partie::deroulement(int mode, Console* pConsole, Damier* damier, char tour, char adv)
+int Partie::deroulement(int mode, Console* pConsole, Damier* damier, FenetreAllegro* pAllegro, char tour, char adv)
 {
     /// DECLARATION DES VARIABLES D'AFFICHAGE DU CURSEUR DU DAMIER
 
@@ -91,6 +90,10 @@ int Partie::deroulement(int mode, Console* pConsole, Damier* damier, char tour, 
     while(continuerTour)
     {
         // GESTIONS DES EVENEMENTS CLAVIER
+        if(key[KEY_G] && pAllegro->IsAllegroActive())
+        {
+            pAllegro->FermetureModeGraphique();
+        }
         if(pConsole->isKeyboardPressed())
         {
             //récupération de la touche sur laquelle l'utilisateur a appuyé
@@ -130,6 +133,15 @@ int Partie::deroulement(int mode, Console* pConsole, Damier* damier, char tour, 
                     rafraichirEcran=true;
                 }
             }
+
+            // Ouverture du mode graphique
+            if((touche == 'g' || touche == 'G') && !pAllegro->IsAllegroActive())
+            {
+                pAllegro->OuvertureModeGraphique(1280, 720, false);
+
+                /// TEMP
+                pAllegro->AfficherDamier(damier, tour);
+            }
         }
 
         if(rafraichirEcran)
@@ -144,6 +156,9 @@ int Partie::deroulement(int mode, Console* pConsole, Damier* damier, char tour, 
 
             rafraichirEcran = false;
         }
+
+        if(pAllegro->IsAllegroActive())
+            blit(pAllegro->buffer(), screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);
     }
     system("cls");
 
