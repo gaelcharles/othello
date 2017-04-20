@@ -82,22 +82,22 @@ void FenetreAllegro::AfficherDamier(Damier* pDamier, char tour, int marge)
         line(m_buffer, marge, marge+i*ALLEG_TCASE, marge+ALLEG_TCASE*TAILLE_PLATEAU, marge+i*ALLEG_TCASE, 0xFFFFFF);
     }
 
-    for(int j(0) ; j<TAILLE_PLATEAU ; j++)
+    for(int i(0) ; i<TAILLE_PLATEAU ; i++)
     {
-        for(int i(0) ; i<TAILLE_PLATEAU ; i++)
+        for(int j(0) ; j<TAILLE_PLATEAU ; j++)
         {
             switch(pDamier->getDamier()[i][j])
             {
             case NOIR:
-                circlefill(m_buffer, marge+i*ALLEG_TCASE+ALLEG_TCASE/2, marge+j*ALLEG_TCASE+ALLEG_TCASE/2, 20, 0x000000);
+                circlefill(m_buffer, marge+j*ALLEG_TCASE+ALLEG_TCASE/2, marge+i*ALLEG_TCASE+ALLEG_TCASE/2, 20, 0x000000);
                 break;
 
             case BLANC:
-                circlefill(m_buffer, marge+i*ALLEG_TCASE+ALLEG_TCASE/2, marge+j*ALLEG_TCASE+ALLEG_TCASE/2, 20, 0xFFFFFF);
+                circlefill(m_buffer, marge+j*ALLEG_TCASE+ALLEG_TCASE/2, marge+i*ALLEG_TCASE+ALLEG_TCASE/2, 20, 0xFFFFFF);
                 break;
 
             case COUP_JOUABLE:
-                circlefill(m_buffer, marge+i*ALLEG_TCASE+ALLEG_TCASE/2, marge+j*ALLEG_TCASE+ALLEG_TCASE/2, 5, 0xFF0000);
+                circlefill(m_buffer, marge+j*ALLEG_TCASE+ALLEG_TCASE/2, marge+i*ALLEG_TCASE+ALLEG_TCASE/2, 5, 0xFF0000);
                 break;
 
             default : {}
