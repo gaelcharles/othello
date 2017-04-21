@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <vector>
+#include <fstream>
 
 Damier::Damier(int _taille, int _ligneAffichage, int _colonneAffichage)
     :m_taille(_taille), m_ligneAffichage(_ligneAffichage), m_colonneAffichage(_colonneAffichage)
@@ -186,4 +187,38 @@ int Damier::CompterPions(char _color)
     }
 
     return n;
+}
+
+int Damier::chargement()
+{
+    std::ifstream fichier ("partie.txt", std::ios::in);
+
+
+    if(fichier)
+    {
+        int choix, taille;
+        fichier >> choix >> taille;
+
+        char pion;
+
+        for(int i=0; i<taille; i++)
+        {
+            for(int j=0; j<taille; j++)
+            {
+                fichier >> pion;
+                if(pion!='0')
+                    m_damier[i][j]=pion;
+                else
+                    m_damier[i][j]=' ' ;
+            }
+        }
+        return choix;
+    }
+    else
+    {
+        std::cerr << "Impossible d'ouvrir le fichier !" << std::endl;
+        return 3;
+    }
+
+
 }

@@ -20,13 +20,13 @@ int main()
 
     const int origineCurseur = 7; //origine d'affichage du curseur
 
-    bool quitter = false; //booléen de détection de fin de partie
+    bool quitter = false; //boolï¿½en de dï¿½tection de fin de partie
     bool verif = false;
     int choix; //contient la valeur du choix de l'utilisateur pour le menu
 
     IA* ordinateur = new IA; //pointeur sur une instance de l'ordinateur (IA)
 
-    pConsole = Console::getInstance(); //on récupère le pointeur sur l'instance console
+    pConsole = Console::getInstance(); //on rï¿½cupï¿½re le pointeur sur l'instance console
 
     choix = GfxMenu::Afficher(pConsole, ordinateur);
 
@@ -51,10 +51,10 @@ int main()
         if(Partie::CoupExistant(pDamier)) //si l'utilisateur peut jouer un coup
         {
             verif = false;
-
+          
             pConsole->gotoLigCol(origineCurseur, 8);
 
-            //déroulement du tour du joueur actuel
+            //dï¿½roulement du tour du joueur actuel
             if(choix == 2) //deux joueurs
                 quitter=Partie::TourJoueur(pConsole, pDamier, couleur_tour);
             else if(choix == 1) //un joueur
@@ -79,7 +79,7 @@ int main()
                 quitter=true;
         }
 
-        //définit la couleur des pions du joueur pour le tour suivant
+        //dï¿½finit la couleur des pions du joueur pour le tour suivant
         if(couleur_tour == NOIR)
              couleur_tour = BLANC;
         else
@@ -89,7 +89,7 @@ int main()
     // Fin de partie
     GfxFin::AfficherFin(pDamier);
 
-    // On efface les allocations mémoires
+    // On efface les allocations mï¿½moires
     Console::deleteInstance();
     delete pDamier;
 

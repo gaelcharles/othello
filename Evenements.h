@@ -9,6 +9,7 @@
 #include <iostream>
 #include <windows.h>
 #include <time.h>
+#include <fstream>
 
 namespace Curseur
 {

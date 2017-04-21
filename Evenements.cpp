@@ -12,16 +12,16 @@ void Curseur::deplacer(char _key, int& _ligneCurseurDamier, int& _colonneCurseur
     case 'Z': // Z : Haut
     case 'z':
         _ligneCurseurDamier--; //remonte le curseur
-        if(_ligneCurseurDamier < 0) _ligneCurseurDamier = 0; //ne peut pas dépasser le damier
+        if(_ligneCurseurDamier < 0) _ligneCurseurDamier = 0; //ne peut pas dÃ©passer le damier
 
-        _ligneCurseurAffichage-=2; //le curseur affiché remonte de 2
-        if(_ligneCurseurAffichage < _origineCurseurLigne) _ligneCurseurAffichage = _origineCurseurLigne; //ne peut pas dépasser
+        _ligneCurseurAffichage-=2; //le curseur affichÃ© remonte de 2
+        if(_ligneCurseurAffichage < _origineCurseurLigne) _ligneCurseurAffichage = _origineCurseurLigne; //ne peut pas dÃ©passer
         break;
 
     case 'S': // S : Bas
     case 's':
         _ligneCurseurDamier++;
-        if(_ligneCurseurDamier > _ligneCurseurDamierMax) _ligneCurseurDamier = _ligneCurseurDamierMax; // nbLignes-1 car l'indice va de 0 à 4
+        if(_ligneCurseurDamier > _ligneCurseurDamierMax) _ligneCurseurDamier = _ligneCurseurDamierMax; // nbLignes-1 car l'indice va de 0 Ã  4
 
         _ligneCurseurAffichage+=2;
         if(_ligneCurseurAffichage > _ligneCurseurAffichageMax) _ligneCurseurAffichage = _ligneCurseurAffichageMax;
@@ -39,7 +39,7 @@ void Curseur::deplacer(char _key, int& _ligneCurseurDamier, int& _colonneCurseur
     case 'D': // D : Droite
     case 'd':
         _colonneCurseurDamier++;
-        if(_colonneCurseurDamier > _colonneCurseurDamierMax) _colonneCurseurDamier = _colonneCurseurDamierMax; //nbColonnes-1 car l'indice va de 0 à 4
+        if(_colonneCurseurDamier > _colonneCurseurDamierMax) _colonneCurseurDamier = _colonneCurseurDamierMax; //nbColonnes-1 car l'indice va de 0 Ã  4
 
 
         _colonneCurseurAffichage+=4;
@@ -65,11 +65,11 @@ bool Partie::TourJoueur(Console* pConsole, Damier* damier, char couleur_tour)
 
     // INITIALISATION DES VARIABLES
 
-    //coordonnées réelles de la case pointée par le curseur
+    //coordonnÃ©es rÃ©elles de la case pointÃ©e par le curseur
     ligneCurseurDamier = 0;
     colonneCurseurDamier = 0;
 
-    //coordonnées maximales de la case pointée par le curseur
+    //coordonnÃ©es maximales de la case pointÃ©e par le curseur
     ligneCurseurDamierMax = damier->getTaille()-1;
     colonneCurseurDamierMax = damier->getTaille()-1;
 
@@ -77,27 +77,28 @@ bool Partie::TourJoueur(Console* pConsole, Damier* damier, char couleur_tour)
     ligneCurseurAffichageMax = 2*damier->getTaille() + origineCurseurLigne-2;
     colonneCurseurAffichageMax = 4*(damier->getTaille() -1) + origineCurseurColonne;
 
-    //coordonnées d'affichage du curseur
+    //coordonnÃ©es d'affichage du curseur
     ligneCurseurAffichage = origineCurseurLigne;
     colonneCurseurAffichage = origineCurseurColonne;
 
     // Couleur de l'adversaire pendant ce tour
 //    char couleur_adversaire = (couleur_tour == NOIR)? BLANC : NOIR;
 
-    bool rafraichirEcran = true; //pour rentrer dès le début dans la boucle d'affichage
-    bool quitter=false;
+    bool rafraichirEcran = true; //pour rentrer dÃ¨s le dÃ©but dans la boucle d'affichage
+    bool continuerTour=true;
+    int quitter = 0;
 
     GfxDamier::Afficher(pConsole, damier);
 
-    while(!quitter)
+    while(continuerTour)
     {
         // GESTIONS DES EVENEMENTS CLAVIER
         if(pConsole->isKeyboardPressed())
         {
-            //récupération de la touche sur laquelle l'utilisateur a appuyé
+            //rÃ©cupÃ©ration de la touche sur laquelle l'utilisateur a appuyÃ©
             char touche = pConsole->getInputKey();
 
-            if(touche=='z' || touche=='s' || touche=='q' || touche=='d') //commandes de déplacement du curseur
+            if(touche=='z' || touche=='s' || touche=='q' || touche=='d') //commandes de dÃ©placement du curseur
             {
                 Curseur::deplacer(touche, ligneCurseurDamier, colonneCurseurDamier, ligneCurseurAffichage, colonneCurseurAffichage,
                                   origineCurseurLigne, origineCurseurColonne, ligneCurseurAffichageMax, colonneCurseurAffichageMax,
@@ -111,7 +112,26 @@ bool Partie::TourJoueur(Console* pConsole, Damier* damier, char couleur_tour)
                 damier->ChangerCouleurPions(ligneCurseurDamier, colonneCurseurDamier, couleur_tour);
                 quitter=true;
                 damier->ReinitialiserPossibilites();
+                
                 rafraichirEcran = true;
+            }
+
+            if(touche == 27) //si appuie sur ECHAP
+            {
+                //ouvre le menu ECHAP
+                quitter=GfxMenu::echap(pConsole, mode, damier);
+
+                //si le joueur veut quitter
+                if(quitter)
+                {
+                    continuerTour=false;
+                    rafraichirEcran=false;
+                }
+                else //s'il veut juste reprendre le jeu
+                {
+                    continuerTour=true;
+                    rafraichirEcran=true;
+                }
             }
         }
 
@@ -130,7 +150,7 @@ bool Partie::TourJoueur(Console* pConsole, Damier* damier, char couleur_tour)
     }
     system("cls");
 
-return false;
+return quitter;
 }
 
 bool Partie::CoupExistant(Damier* damier)
@@ -151,4 +171,32 @@ bool Partie::CoupExistant(Damier* damier)
     }
 
     return coup_existant;
+}
+
+void Partie::sauvegarde(Damier* d, int mode)
+{
+
+    std::ofstream fichier("partie.txt", std::ios::out | std::ios::trunc);
+
+    if(fichier)
+    {
+        d->reset();
+        fichier << mode << " " << d->getTaille() << std::endl;
+        for(int i=0; i<d->getTaille() ; i++)
+        {
+            for(int j=0; j<d->getTaille(); j++)
+            {
+                if(d->getDamier()[i][j]!=' ')
+                    fichier << d->getDamier()[i][j] << " " ;
+                else
+                    fichier << '0' << " ";
+            }
+            fichier << std::endl;
+        }
+        fichier.close();
+    }
+    else
+    {
+        std::cerr << "Impossible" << std::endl;
+    }
 }
