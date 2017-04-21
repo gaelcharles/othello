@@ -47,13 +47,13 @@ void Curseur::deplacer(char _key, int& _ligneCurseurDamier, int& _colonneCurseur
     }
 }
 
-int Partie::deroulement(int mode, Console* pConsole, Damier* damier, FenetreAllegro* pAllegro, char tour, char adv)
+int Partie::TourJoueur(int mode, Console* _pConsole, Damier* _pDamier, FenetreAllegro* _pAllegro, char _couleur_tour)
 {
     /// DECLARATION DES VARIABLES D'AFFICHAGE DU CURSEUR DU DAMIER
 
     //initialisation des valeurs constantes du sous-programme
-    const int origineCurseurLigne = damier->getLigneAffichage()+1;
-    const int origineCurseurColonne = damier->getColonneAffichage()+2;
+    const int origineCurseurLigne = _pDamier->getLigneAffichage()+1;
+    const int origineCurseurColonne = _pDamier->getColonneAffichage()+2;
 
     int ligneCurseurDamier, colonneCurseurDamier;
     int ligneCurseurAffichage, colonneCurseurAffichage;
@@ -70,36 +70,37 @@ int Partie::deroulement(int mode, Console* pConsole, Damier* damier, FenetreAlle
     colonneCurseurDamier = 0;
 
     //coordonnées maximales de la case pointée par le curseur
-    ligneCurseurDamierMax = damier->getTaille()-1;
-    colonneCurseurDamierMax = damier->getTaille()-1;
+    ligneCurseurDamierMax = _pDamier->getTaille()-1;
+    colonneCurseurDamierMax = _pDamier->getTaille()-1;
 
     //ligne et colonne maximale d'affichage du curseur
-    ligneCurseurAffichageMax = 2*damier->getTaille() + origineCurseurLigne-2;
-    colonneCurseurAffichageMax = 4*(damier->getTaille() -1) + origineCurseurColonne;
+    ligneCurseurAffichageMax = 2*_pDamier->getTaille() + origineCurseurLigne-2;
+    colonneCurseurAffichageMax = 4*(_pDamier->getTaille() -1) + origineCurseurColonne;
 
     //coordonnées d'affichage du curseur
     ligneCurseurAffichage = origineCurseurLigne;
     colonneCurseurAffichage = origineCurseurColonne;
 
-    bool rafraichirEcran = true; //pour rentrer dès le début dans la boucle d'affichage
-    bool continuerTour=true;
+    bool rafraichir_ecran = true; //pour rentrer dès le début dans la boucle d'affichage
+    bool continuer_tour=true;
     int quitter = 0;
     char touche = 0;
     bool pression_touche = false;
 
-    GfxDamier::afficher(pConsole, damier);
+    GfxDamier::Afficher(_pConsole, _pDamier);
 
-    while(continuerTour)
+    while(continuer_tour)
     {
-        continuerTour = true;
-        if(!pAllegro->IsAllegroActive()) // Allegro désactivé
+        continuer_tour = true;
+
+        if(!_pAllegro->IsAllegroActive()) // Allegro désactivé
         {
             // GESTIONS DES EVENEMENTS CLAVIER
-            if(pConsole->isKeyboardPressed())
+            if(_pConsole->isKeyboardPressed())
             {
                 /// NOTE : faire un switch
                 //récupération de la touche sur laquelle l'utilisateur a appuyé
-                touche = pConsole->getInputKey();
+                touche = _pConsole->getInputKey();
 
                 if(touche=='z' || touche=='s' || touche=='q' || touche=='d') //commandes de déplacement du curseur
                 {
@@ -107,39 +108,39 @@ int Partie::deroulement(int mode, Console* pConsole, Damier* damier, FenetreAlle
                                       origineCurseurLigne, origineCurseurColonne, ligneCurseurAffichageMax, colonneCurseurAffichageMax,
                                       ligneCurseurDamierMax, colonneCurseurDamierMax);
 
-                    pConsole->gotoLigCol(ligneCurseurAffichage, colonneCurseurAffichage);
+                    _pConsole->gotoLigCol(ligneCurseurAffichage, colonneCurseurAffichage);
                 }
 
-                if(touche==13 && damier->getDamier()[ligneCurseurDamier][colonneCurseurDamier]==COUP_JOUABLE)
+                if(touche==13 && _pDamier->getDamier()[ligneCurseurDamier][colonneCurseurDamier]==COUP_JOUABLE)
                 {
-                    damier->changement(tour, adv, ligneCurseurDamier, colonneCurseurDamier);
-                    continuerTour=false;
-                    damier->reset();
-                    rafraichirEcran = true;
+                    _pDamier->ChangerCouleurPions(ligneCurseurDamier, colonneCurseurDamier, _couleur_tour);
+                    continuer_tour=false;
+                    _pDamier->ReinitialiserPossibilites();
+                    rafraichir_ecran = true;
                 }
 
                 if(touche == 27) //si appuie sur ECHAP
                 {
                     //ouvre le menu ECHAP
-                    quitter=GfxMenu::echap(pConsole, mode, damier);
+                    quitter=GfxMenu::Echap(_pConsole, mode, _pDamier);
 
                     //si le joueur veut quitter
                     if(quitter)
                     {
-                        continuerTour=false;
-                        rafraichirEcran=false;
+                        continuer_tour=false;
+                        rafraichir_ecran=false;
                     }
                     else //s'il veut juste reprendre le jeu
                     {
-                        continuerTour=true;
-                        rafraichirEcran=true;
+                        continuer_tour=true;
+                        rafraichir_ecran=true;
                     }
                 }
 
                 // Ouverture du mode graphique
                 if((touche == 'g' || touche == 'G'))
                 {
-                    pAllegro->OuvertureModeGraphique(1280, 720);
+                    _pAllegro->OuvertureModeGraphique(1280, 720);
                 }
             }
         }
@@ -155,22 +156,22 @@ int Partie::deroulement(int mode, Console* pConsole, Damier* damier, FenetreAlle
                 // Z-Q-S-D : Déplacement du curseur
                 case 'Z': case 'Q': case 'S': case 'D':
                 case 'z': case 'q': case 's': case 'd':
-                    pAllegro->DeplacerCurseur(touche);
+                    _pAllegro->DeplacerCurseur(touche);
                     break;
 
                 // G : Basculement mode graphique
                 case 'G': case 'g':
-                    pAllegro->FermetureModeGraphique();
+                    _pAllegro->FermetureModeGraphique();
                     break;
 
-                // Entrée : Jouer le coup
+                // Entree : Jouer le coup
                 case 13:
-                    if(damier->getDamier()[pAllegro->curseur().Y][pAllegro->curseur().X] == COUP_JOUABLE)
+                    if(_pDamier->getDamier()[_pAllegro->curseur().Y][_pAllegro->curseur().X] == COUP_JOUABLE)
                     {
-                        damier->reset();
-                        damier->changement(tour, adv, pAllegro->curseur().Y, pAllegro->curseur().X);
-                        continuerTour = false;
-                        rafraichirEcran = true;
+                        _pDamier->ReinitialiserPossibilites();
+                        _pDamier->ChangerCouleurPions(_pAllegro->curseur().Y, _pAllegro->curseur().X, _couleur_tour);
+                        continuer_tour = false;
+                        rafraichir_ecran = true;
                     }
                     break;
 
@@ -179,62 +180,64 @@ int Partie::deroulement(int mode, Console* pConsole, Damier* damier, FenetreAlle
             }
         }
         // Fin de boucle : affichages
-        if(rafraichirEcran) // Affichages
+        if(rafraichir_ecran) // Affichages
         {
-            pConsole->gotoLigCol(origineCurseurLigne-4, origineCurseurColonne);
+            _pConsole->gotoLigCol(origineCurseurLigne-4, origineCurseurColonne);
 
-            GfxInfos::afficherTour(pConsole, tour);
-            GfxInfos::afficherScore(pConsole, damier);
-            damier->afficher(pConsole);
+            GfxInfos::AfficherTour(_pConsole, _couleur_tour);
+            GfxInfos::AfficherScore(_pConsole, _pDamier);
+            _pDamier->Afficher(_pConsole);
 
-            pConsole->gotoLigCol(ligneCurseurAffichage, colonneCurseurAffichage);
+            _pConsole->gotoLigCol(ligneCurseurAffichage, colonneCurseurAffichage);
 
-            rafraichirEcran = false;
+            rafraichir_ecran = false;
         }
 
-        if(pAllegro->IsAllegroActive())
-            pAllegro->AfficherFenetreGraphique(damier, tour);
+        if(_pAllegro->IsAllegroActive())
+            _pAllegro->AfficherFenetreGraphique(_pDamier, _couleur_tour);
     }
     system("cls");
 
-return quitter;
+    return quitter;
 }
 
-bool Partie::verification(Damier* damier)
+bool Partie::CoupExistant(Damier* _pDamier)
 {
-    bool ok = false;
+    bool coup_existant = false; //true: le joueur peut jouer | false: le joueur n'a aucun coup disponible
 
-    for(int i=0 ; i<damier->getTaille() ; i++)
+    for(int i=0 ; i<_pDamier->getTaille() ; i++)
     {
-        for(int j=0 ; j<damier->getTaille() ; j++)
+        for(int j=0 ; j<_pDamier->getTaille() ; j++)
         {
-            if(damier->getDamier()[i][j] == COUP_JOUABLE)
+            if(_pDamier->getDamier()[i][j] == COUP_JOUABLE) //si il existe une case jouable pour le joueur
             {
-                ok = true;
-                break;
+                coup_existant = true;
+                break; //sortie de la premiere boucle
             }
         }
-        if(ok) break;
+        if(coup_existant) break; //sortie de la seconde boucle
     }
 
-    return ok;
+    return coup_existant;
 }
 
-void Partie::sauvegarde(Damier* d, int mode)
+void Partie::Sauvegarde(Damier* _pDamier, int mode)
 {
 
     std::ofstream fichier("partie.txt", std::ios::out | std::ios::trunc);
 
     if(fichier)
     {
-        d->reset();
-        fichier << mode << " " << d->getTaille() << std::endl;
-        for(int i=0; i<d->getTaille() ; i++)
+        _pDamier->ReinitialiserPossibilites();
+
+        fichier << mode << " " << _pDamier->getTaille() << std::endl;
+
+        for(int i=0; i<_pDamier->getTaille() ; i++)
         {
-            for(int j=0; j<d->getTaille(); j++)
+            for(int j=0; j<_pDamier->getTaille(); j++)
             {
-                if(d->getDamier()[i][j]!=' ')
-                    fichier << d->getDamier()[i][j] << " " ;
+                if(_pDamier->getDamier()[i][j]!=' ')
+                    fichier << _pDamier->getDamier()[i][j] << " " ;
                 else
                     fichier << '0' << " ";
             }

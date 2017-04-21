@@ -15,23 +15,24 @@ int main()
 {
     srand(time(NULL));
 
-    // Variables
-    Console* pConsole = NULL;
-    Damier* damier = new Damier(TAILLE_PLATEAU, LIGNE_AFFICHAGE, COLONNE_AFFICHAGE);
+    // Instances du jeu
+    Console* pConsole = NULL; //pointeur sur une instance de la console
+    Damier* pDamier = new Damier(TAILLE_PLATEAU, LIGNE_AFFICHAGE, COLONNE_AFFICHAGE); //pointeur sur une instance du damier
+    IA* pOrdinateur = new IA; //pointeur sur une instance de l'ordinateur
     FenetreAllegro* pAllegro = new FenetreAllegro();
 
-    char tour=NOIR, adv=BLANC;
-    const int origineCurseurL = 7, origineCurseurC = 8;
-    int quitter = 0;
-
-    bool verif=false;
-    int choix;
-    IA* bot = new IA;
+    char couleur_tour = NOIR; //couleur des pions du joueur actuel
+    const int origineCurseurLigne = 7, origineCurseurColonne = 8; //coordonnees d'origine pour l'affichage du pointeur
+    int quitter = 0; //booleen de dectection de fin de partie
+    int choix; //choix de l'utilisateur pour le menu
+    bool verif = false;
 
     pConsole = Console::getInstance();
 
-    choix = GfxMenu::afficher(damier, pConsole, bot);
-    if(choix == 3) exit(0);
+    choix = GfxMenu::Afficher(pDamier, pConsole, pOrdinateur); //affiche le menu
+
+    if(choix == 3) //si l'utilisateur quitte le programme
+        exit(0);
 
     // Passe la console en texte blanc sur fond vert
     pConsole->setColor(COULEUR_BLANC, COULEUR_VERT);
@@ -39,28 +40,31 @@ int main()
 
     while(!quitter)
     {
-        // On cherche les coups jouables
-        for(int i=0 ; i<damier->getTaille() ; i++)
+        //pour tous les coups jouables
+        for(int i=0 ; i<pDamier->getTaille() ; i++)
         {
-            for(int j=0 ; j<damier->getTaille() ; j++)
+            for(int j=0 ; j<pDamier->getTaille() ; j++)
             {
-                if(damier->getDamier()[i][j] == tour)
-                    damier->coups(tour, adv, i, j);
+                if(pDamier->getDamier()[i][j] == couleur_tour)
+                    pDamier->CoupsPossibles(i, j, couleur_tour);
             }
         }
 
-        if(Partie::verification(damier))
+        if(Partie::CoupExistant(pDamier)) //si le joueur peut jouer un coup
         {
             verif = false;
-            pConsole->gotoLigCol(origineCurseurL, origineCurseurC);
-            if(choix == 2) // Deux joueurs
-                quitter=Partie::deroulement(choix, pConsole, damier, pAllegro, tour, adv);
-            else if(choix == 1) // Un joueur
+
+            pConsole->gotoLigCol(origineCurseurLigne, origineCurseurColonne);
+
+            //Deroulement du tour
+            if(choix == 2) //mode deux joueurs
+                quitter = Partie::TourJoueur(choix, pConsole, pDamier, pAllegro, couleur_tour);
+            else if(choix == 1) //mode joueur contre ordinateur
             {
-                if(tour == BLANC) // Tour de l'IA
-                    quitter = bot->deroulement(pConsole, damier, tour, adv);
+                if(couleur_tour == BLANC) //tour de l'ordinateur
+                    quitter = pOrdinateur->TourOrdinateur(pConsole, pDamier, couleur_tour);
                 else
-                    quitter = Partie::deroulement(choix, pConsole, damier, pAllegro, tour, adv);
+                    quitter = Partie::TourJoueur(choix, pConsole, pDamier, pAllegro, couleur_tour);
             }
         }
         else
@@ -68,39 +72,29 @@ int main()
             if(!verif)
             {
                 pConsole->gotoLigCol(0,0);
-                std::cout << "Aucun coup possible, vous passez votre tour !" << std::endl ;
+                std::cout << "Aucun coup possible, vous passez votre tour !" << std::endl;
                 system("pause");
                 system("cls");
-                verif=true;
+                verif = true;
             }
             else
-            {
-                quitter=1;
-            }
+                quitter = 1; //quitte le programme
         }
 
-        if(tour==BLANC)
-        {
-             tour=NOIR;
-             adv=BLANC;
-        }
-        else
-        {
-             tour=BLANC;
-             adv=NOIR;
-        }
+        couleur_tour = (couleur_tour == NOIR) ? BLANC : NOIR; //change la couleur des pions pour le tour suivant
 
     }
 
     // Fin de partie
-    //Si la partie se termine parce que l'un des deux a gagné, on affiche le score
-    if(quitter == 1) GfxFin::afficherFin(damier);
+    if(quitter == 1) //si la partie se termine parce que l'un des deux a gagne, on affiche le score
+        GfxFin::AfficherFin(pDamier);
 
     // Fin de programme
     Console::deleteInstance();
-    delete damier;
-    delete bot;
+    delete pDamier;
+    delete pOrdinateur;
     delete pAllegro;
+
     return 0;
 }
 END_OF_MAIN();

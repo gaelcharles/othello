@@ -14,11 +14,11 @@ class IA
         IA();
         ~IA();
 
-        // Méthodes
-        bool deroulement(Console* _pConsole, Damier* _pDamier, char _tour, char _adv);
-        std::vector<int> ChooseRandomCell(Damier* _pDamier);
+        //Methodes
+        std::vector< std::vector<int> > CasesJouables(Damier* _pDamier);
+        bool TourOrdinateur(Console* _pConsole, Damier* _pDamier, char _couleur_tour);
 
-        // G & S
+        //G & S
         int getDifficulte() const { return m_difficulte; }
         void setDifficulte(int _difficulte);
 };
