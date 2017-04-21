@@ -22,18 +22,18 @@ void IA::setDifficulte(int _difficulte)
     m_difficulte = _difficulte;
 }
 
-std::vector<int> IA::ChooseRandomCell(Damier* _pDamier)
+std::vector< std::vector<int> > IA::CasesJouables(Damier* _pDamier)
 /**********************************************************************************************
- * \brief ChooseRandomCell : choisit au hasard une case où un coup est jouable                *
- * \author Gaël                                                                               *
+ * \brief CasesJouables : retourne la liste des coordonnees de toutes les cases jouables      *
+ * \author Gaël + Tom                                                                         *
  *                                                                                            *
  * \param _pDamier : pointeur sur le damier                                                   *
- * \return Un vecteur de 2 int représentant les coordonnées i,j de la case choisie            *
+ * \return Liste des coordonnees de toutes les cases jouables                                 *
  *                                                                                            *
  **********************************************************************************************/
 {
     // Ensemble des coordonnées donnant un coup jouable
-    std::vector<std::vector<int> > liste;
+    std::vector<std::vector<int> > cases_jouables;
 
     // Vecteur tampon regroupant les coordonnées d'un coup jouable donné
     std::vector<int> tampon;
@@ -46,33 +46,37 @@ std::vector<int> IA::ChooseRandomCell(Damier* _pDamier)
             {
                 tampon.push_back(i);
                 tampon.push_back(j);
-                liste.push_back(tampon);
+                cases_jouables.push_back(tampon);
                 tampon.clear();
             }
         }
     }
 
-    return liste[rand() % (liste.size())]; // Un coup jouable aléatoire parmi tous ceux de la liste
+    return cases_jouables; //retourne la liste des coordonnees de toutes les cases jouables
 }
 
-bool IA::deroulement(Console* _pConsole, Damier* _pDamier, char _tour, char _adv)
+bool IA::TourOrdinateur(Console* _pConsole, Damier* _pDamier, char _couleur_tour)
 {
-    std::vector<int> cell;
+    std::vector<int> case_choisie; //case choisie par l'ordinateur
 
-    _pDamier->afficher(_pConsole);
-    GfxInfos::afficherTour(_pConsole, _tour);
-    GfxInfos::afficherScore(_pConsole, _pDamier);
-    GfxDamier::afficherContenu(_pConsole, _pDamier);
+    //Affichage des differents modules
+    _pDamier->Afficher(_pConsole);
+    GfxInfos::AfficherTour(_pConsole, _couleur_tour);
+    GfxInfos::AfficherScore(_pConsole, _pDamier);
+    GfxDamier::AfficherContenu(_pConsole, _pDamier);
 
     /// IA NIVEAU 1 : JOUE AU HASARD
     if(m_difficulte == 1)
     {
-        cell = ChooseRandomCell(_pDamier);
-        _pDamier->changement(_tour, _adv, cell[0], cell[1]);
-        _pDamier->reset();
+        //vecteur contenant l'ensemble de chaque case jouable
+        std::vector< std::vector<int> > cases_jouables = CasesJouables(_pDamier);
+
+        case_choisie = cases_jouables[rand() % (cases_jouables.size()) ]; //choisit une case aleatoire parmi celles de la liste
+        _pDamier->ChangerCouleurPions(case_choisie[0], case_choisie[1], _couleur_tour); //retourne les pions selon le pion joue aux coordonnees en parametres
+        _pDamier->ReinitialiserPossibilites(); //retourne le nombre de pions de la couleur du joueur en parametre
     }
 
-    // Simulation de rélfexion
+    //Animation : reflexion de l'ordinateur
     _pConsole->gotoLigCol(12, 45);
     std::cout << "L'IA reflechit";
     for(int i(0) ; i<3 ; i++)
@@ -80,27 +84,15 @@ bool IA::deroulement(Console* _pConsole, Damier* _pDamier, char _tour, char _adv
         Sleep(200);
         std::cout << '.';
     }
-
-    // Le pion clignote juste avant d'être joué par l'IA
-    for(int i(0) ; i<4 ; i++)
-    {
-        _pConsole->gotoLigCol(2*cell[0]+_pDamier->getLigneAffichage()+1, 4*cell[1]+_pDamier->getColonneAffichage()+1);
-        _pConsole->setColor(COULEUR_BLANC, COULEUR_VERT);
-        (i%2 == 0) ? std::cout << " O " : std::cout << "   ";
-        _pConsole->gotoLigCol(12, 62);
-        Sleep(250);
-    }
-
-    // Effacement de la réflexion de l'IA
     _pConsole->gotoLigCol(12, 45);
     _pConsole->setColor(COULEUR_BLANC, COULEUR_VERT);
     std::cout << "                 ";
 
-    // Affichage du coup joué
+    //Affiche le coup joue
     _pConsole->gotoLigCol(_pDamier->getLigneAffichage()-3, _pDamier->getColonneAffichage()+2);
-    GfxInfos::afficherTour(_pConsole, _tour);
-    GfxInfos::afficherScore(_pConsole, _pDamier);
-    GfxDamier::afficherContenu(_pConsole, _pDamier);
+    GfxInfos::AfficherTour(_pConsole, _couleur_tour);
+    GfxInfos::AfficherScore(_pConsole, _pDamier);
+    GfxDamier::AfficherContenu(_pConsole, _pDamier);
 
     return false;
 }

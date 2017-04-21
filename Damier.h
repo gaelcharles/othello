@@ -11,25 +11,24 @@ class Damier
         Damier(int _taille, int _ligneAffichage, int _colonneAffichage);
         ~Damier();
 
-        //getters
+        //Getters
         int getTaille() const { return m_taille; }
         int getLigneAffichage() const { return m_ligneAffichage; }
         int getColonneAffichage() const { return m_colonneAffichage; }
-
         std::vector< std::vector<char> > getDamier() { return m_damier; }
 
-        //affiche le damier à partir du coin supérieur gauche (point d'affichage)
-        void afficher(Console* _pConsole);
-        void coups(char tour, char adv, int ligne, int colonne);
-        void changement(char tour, char adv, int ligne, int colonne);
-        void reset();
-        int comptagePions(char _color);
-        int chargement();
+        //Methodes de la classe
+        void Afficher(Console* _pConsole); //affiche le damier à partir du coin superieur gauche (point d'affichage)
+        void CoupsPossibles(int _ligne, int _colonne, char _couleur_tour); //cherche tous les coups possibles pour un joueur
+        void ChangerCouleurPions(int _ligne, int _colonne, char _couleur_tour); //retourne les pions selon le pion joue aux coordonnees en parametres
+        void ReinitialiserPossibilites(); //retourne le nombre de pions de la couleur du joueur en parametre
+        int CompterPions(char _couleur); //retourne le nombre de pions de la couleur en parametre
+        int Chargement();
 
     private:
-        //nombre de lignes et de colonnes du damier
-        int m_taille;
-        //coordonnées auxquelles il faut afficher le damier
+        int m_taille; //nombre de lignes et de colonnes du damier
+
+        //Coordonnees auxquelles il faut afficher le damier
         int m_ligneAffichage;
         int m_colonneAffichage;
 

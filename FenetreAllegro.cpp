@@ -153,8 +153,8 @@ void FenetreAllegro::AfficherInfos(Damier* pDamier, char tour, int marge)
     circlefill(m_buffer, marge+75, marge+TAILLE_PLATEAU*ALLEG_TCASE+90, 15, (tour == NOIR) ? 0x000000 : 0xFFFFFF);
     circle(m_buffer, marge+75, marge+TAILLE_PLATEAU*ALLEG_TCASE+90, 15, 0x000000);
 
-    textprintf_ex(m_buffer, font, marge-20, marge+TAILLE_PLATEAU*ALLEG_TCASE+120, 0xFFFFFF, 0x000000, "%d pions noirs",  pDamier->comptagePions(NOIR));
-    textprintf_ex(m_buffer, font, marge-20, marge+TAILLE_PLATEAU*ALLEG_TCASE+135, 0x000000, 0xFFFFFF, "%d pions blancs", pDamier->comptagePions(BLANC));
+    textprintf_ex(m_buffer, font, marge-20, marge+TAILLE_PLATEAU*ALLEG_TCASE+120, 0xFFFFFF, 0x000000, "%d pions noirs",  pDamier->CompterPions(NOIR));
+    textprintf_ex(m_buffer, font, marge-20, marge+TAILLE_PLATEAU*ALLEG_TCASE+135, 0x000000, 0xFFFFFF, "%d pions blancs", pDamier->CompterPions(BLANC));
 }
 
 void FenetreAllegro::AfficherFenetreGraphique(Damier* pDamier, char tour, int marge_plateau)
