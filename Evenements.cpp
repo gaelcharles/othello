@@ -84,67 +84,102 @@ int Partie::deroulement(int mode, Console* pConsole, Damier* damier, FenetreAlle
     bool rafraichirEcran = true; //pour rentrer dès le début dans la boucle d'affichage
     bool continuerTour=true;
     int quitter = 0;
+    char touche = 0;
+    bool pression_touche = false;
 
     GfxDamier::afficher(pConsole, damier);
 
     while(continuerTour)
     {
-        // GESTIONS DES EVENEMENTS CLAVIER
-        if(key[KEY_G] && pAllegro->IsAllegroActive())
+        continuerTour = true;
+        if(!pAllegro->IsAllegroActive()) // Allegro désactivé
         {
-            pAllegro->FermetureModeGraphique();
-        }
-        if(pConsole->isKeyboardPressed())
-        {
-            //récupération de la touche sur laquelle l'utilisateur a appuyé
-            char touche = pConsole->getInputKey();
-
-            if(touche=='z' || touche=='s' || touche=='q' || touche=='d') //commandes de déplacement du curseur
+            // GESTIONS DES EVENEMENTS CLAVIER
+            if(pConsole->isKeyboardPressed())
             {
-                Curseur::deplacer(touche, ligneCurseurDamier, colonneCurseurDamier, ligneCurseurAffichage, colonneCurseurAffichage,
-                                  origineCurseurLigne, origineCurseurColonne, ligneCurseurAffichageMax, colonneCurseurAffichageMax,
-                                  ligneCurseurDamierMax, colonneCurseurDamierMax);
+                /// NOTE : faire un switch
+                //récupération de la touche sur laquelle l'utilisateur a appuyé
+                touche = pConsole->getInputKey();
 
-                pConsole->gotoLigCol(ligneCurseurAffichage, colonneCurseurAffichage);
-            }
-
-            if(touche==13 && damier->getDamier()[ligneCurseurDamier][colonneCurseurDamier]==COUP_JOUABLE)
-            {
-                damier->changement(tour, adv, ligneCurseurDamier, colonneCurseurDamier);
-                continuerTour=false;
-                damier->reset();
-                rafraichirEcran = true;
-            }
-
-            if(touche == 27) //si appuie sur ECHAP
-            {
-                //ouvre le menu ECHAP
-                quitter=GfxMenu::echap(pConsole, mode, damier);
-
-                //si le joueur veut quitter
-                if(quitter)
+                if(touche=='z' || touche=='s' || touche=='q' || touche=='d') //commandes de déplacement du curseur
                 {
+                    Curseur::deplacer(touche, ligneCurseurDamier, colonneCurseurDamier, ligneCurseurAffichage, colonneCurseurAffichage,
+                                      origineCurseurLigne, origineCurseurColonne, ligneCurseurAffichageMax, colonneCurseurAffichageMax,
+                                      ligneCurseurDamierMax, colonneCurseurDamierMax);
+
+                    pConsole->gotoLigCol(ligneCurseurAffichage, colonneCurseurAffichage);
+                }
+
+                if(touche==13 && damier->getDamier()[ligneCurseurDamier][colonneCurseurDamier]==COUP_JOUABLE)
+                {
+                    damier->changement(tour, adv, ligneCurseurDamier, colonneCurseurDamier);
                     continuerTour=false;
-                    rafraichirEcran=false;
+                    damier->reset();
+                    rafraichirEcran = true;
                 }
-                else //s'il veut juste reprendre le jeu
+
+                if(touche == 27) //si appuie sur ECHAP
                 {
-                    continuerTour=true;
-                    rafraichirEcran=true;
+                    //ouvre le menu ECHAP
+                    quitter=GfxMenu::echap(pConsole, mode, damier);
+
+                    //si le joueur veut quitter
+                    if(quitter)
+                    {
+                        continuerTour=false;
+                        rafraichirEcran=false;
+                    }
+                    else //s'il veut juste reprendre le jeu
+                    {
+                        continuerTour=true;
+                        rafraichirEcran=true;
+                    }
                 }
-            }
 
-            // Ouverture du mode graphique
-            if((touche == 'g' || touche == 'G') && !pAllegro->IsAllegroActive())
-            {
-                pAllegro->OuvertureModeGraphique(1280, 720, false);
-
-                /// TEMP
-                pAllegro->AfficherDamier(damier, tour);
+                // Ouverture du mode graphique
+                if((touche == 'g' || touche == 'G'))
+                {
+                    pAllegro->OuvertureModeGraphique(1280, 720);
+                }
             }
         }
+        else // Allegro activé
+        {
+            // Gestion des événements clavier en mode graphique
+            if(keypressed())
+            {
+                touche = (char)readkey();
 
-        if(rafraichirEcran)
+                switch(touche)
+                {
+                // Z-Q-S-D : Déplacement du curseur
+                case 'Z': case 'Q': case 'S': case 'D':
+                case 'z': case 'q': case 's': case 'd':
+                    pAllegro->DeplacerCurseur(touche);
+                    break;
+
+                // G : Basculement mode graphique
+                case 'G': case 'g':
+                    pAllegro->FermetureModeGraphique();
+                    break;
+
+                // Entrée : Jouer le coup
+                case 13:
+                    if(damier->getDamier()[pAllegro->curseur().Y][pAllegro->curseur().X] == COUP_JOUABLE)
+                    {
+                        damier->reset();
+                        damier->changement(tour, adv, pAllegro->curseur().Y, pAllegro->curseur().X);
+                        continuerTour = false;
+                        rafraichirEcran = true;
+                    }
+                    break;
+
+                default : {}
+                }
+            }
+        }
+        // Fin de boucle : affichages
+        if(rafraichirEcran) // Affichages
         {
             pConsole->gotoLigCol(origineCurseurLigne-4, origineCurseurColonne);
 
@@ -158,7 +193,7 @@ int Partie::deroulement(int mode, Console* pConsole, Damier* damier, FenetreAlle
         }
 
         if(pAllegro->IsAllegroActive())
-            blit(pAllegro->buffer(), screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);
+            pAllegro->AfficherFenetreGraphique(damier, tour);
     }
     system("cls");
 
@@ -209,6 +244,6 @@ void Partie::sauvegarde(Damier* d, int mode)
     }
     else
     {
-        std::cerr << "Impossible" << std::endl;
+        std::cerr << "Erreur : le fichier n'a pas pu etre lu." << std::endl;
     }
 }
