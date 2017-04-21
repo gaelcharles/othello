@@ -12,16 +12,16 @@ void Curseur::deplacer(char _key, int& _ligneCurseurDamier, int& _colonneCurseur
     case 'Z': // Z : Haut
     case 'z':
         _ligneCurseurDamier--; //remonte le curseur
-        if(_ligneCurseurDamier < 0) _ligneCurseurDamier = 0; //ne peut pas dépasser le damier
+        if(_ligneCurseurDamier < 0) _ligneCurseurDamier = 0; //ne peut pas dÃ©passer le damier
 
-        _ligneCurseurAffichage-=2; //le curseur affiché remonte de 2
-        if(_ligneCurseurAffichage < _origineCurseurLigne) _ligneCurseurAffichage = _origineCurseurLigne; //ne peut pas dépasser
+        _ligneCurseurAffichage-=2; //le curseur affichÃ© remonte de 2
+        if(_ligneCurseurAffichage < _origineCurseurLigne) _ligneCurseurAffichage = _origineCurseurLigne; //ne peut pas dÃ©passer
         break;
 
     case 'S': // S : Bas
     case 's':
         _ligneCurseurDamier++;
-        if(_ligneCurseurDamier > _ligneCurseurDamierMax) _ligneCurseurDamier = _ligneCurseurDamierMax; // nbLignes-1 car l'indice va de 0 à 4
+        if(_ligneCurseurDamier > _ligneCurseurDamierMax) _ligneCurseurDamier = _ligneCurseurDamierMax; // nbLignes-1 car l'indice va de 0 Ã  4
 
         _ligneCurseurAffichage+=2;
         if(_ligneCurseurAffichage > _ligneCurseurAffichageMax) _ligneCurseurAffichage = _ligneCurseurAffichageMax;
@@ -39,7 +39,7 @@ void Curseur::deplacer(char _key, int& _ligneCurseurDamier, int& _colonneCurseur
     case 'D': // D : Droite
     case 'd':
         _colonneCurseurDamier++;
-        if(_colonneCurseurDamier > _colonneCurseurDamierMax) _colonneCurseurDamier = _colonneCurseurDamierMax; //nbColonnes-1 car l'indice va de 0 à 4
+        if(_colonneCurseurDamier > _colonneCurseurDamierMax) _colonneCurseurDamier = _colonneCurseurDamierMax; //nbColonnes-1 car l'indice va de 0 Ã  4
 
 
         _colonneCurseurAffichage+=4;
@@ -48,9 +48,9 @@ void Curseur::deplacer(char _key, int& _ligneCurseurDamier, int& _colonneCurseur
     }
 }
 
-int Partie::deroulement(int mode, Console* pConsole, Damier* damier, char tour, char adv)
+bool Partie::TourJoueur(Console* pConsole, Damier* damier, char couleur_tour)
 {
-    /// DECLARATION DES VARIABLES D'AFFICHAGE DU CURSEUR DU DAMIER
+    // DECLARATION DES VARIABLES D'AFFICHAGE DU CURSEUR DU DAMIER
 
     //initialisation des valeurs constantes du sous-programme
     const int origineCurseurLigne = damier->getLigneAffichage()+1;
@@ -63,14 +63,13 @@ int Partie::deroulement(int mode, Console* pConsole, Damier* damier, char tour, 
     int ligneCurseurAffichageMax, colonneCurseurAffichageMax;
     int ligneCurseurDamierMax, colonneCurseurDamierMax;
 
-    /// INITIALISATION DES VARIABLES
+    // INITIALISATION DES VARIABLES
 
-    /// DEBUT VARIABLES CURSEUR
-    //coordonnées réelles de la case pointée par le curseur
+    //coordonnÃ©es rÃ©elles de la case pointÃ©e par le curseur
     ligneCurseurDamier = 0;
     colonneCurseurDamier = 0;
 
-    //coordonnées maximales de la case pointée par le curseur
+    //coordonnÃ©es maximales de la case pointÃ©e par le curseur
     ligneCurseurDamierMax = damier->getTaille()-1;
     colonneCurseurDamierMax = damier->getTaille()-1;
 
@@ -78,25 +77,28 @@ int Partie::deroulement(int mode, Console* pConsole, Damier* damier, char tour, 
     ligneCurseurAffichageMax = 2*damier->getTaille() + origineCurseurLigne-2;
     colonneCurseurAffichageMax = 4*(damier->getTaille() -1) + origineCurseurColonne;
 
-    //coordonnées d'affichage du curseur
+    //coordonnÃ©es d'affichage du curseur
     ligneCurseurAffichage = origineCurseurLigne;
     colonneCurseurAffichage = origineCurseurColonne;
 
-    bool rafraichirEcran = true; //pour rentrer dès le début dans la boucle d'affichage
+    // Couleur de l'adversaire pendant ce tour
+//    char couleur_adversaire = (couleur_tour == NOIR)? BLANC : NOIR;
+
+    bool rafraichirEcran = true; //pour rentrer dÃ¨s le dÃ©but dans la boucle d'affichage
     bool continuerTour=true;
     int quitter = 0;
 
-    GfxDamier::afficher(pConsole, damier);
+    GfxDamier::Afficher(pConsole, damier);
 
     while(continuerTour)
     {
         // GESTIONS DES EVENEMENTS CLAVIER
         if(pConsole->isKeyboardPressed())
         {
-            //récupération de la touche sur laquelle l'utilisateur a appuyé
+            //rÃ©cupÃ©ration de la touche sur laquelle l'utilisateur a appuyÃ©
             char touche = pConsole->getInputKey();
 
-            if(touche=='z' || touche=='s' || touche=='q' || touche=='d') //commandes de déplacement du curseur
+            if(touche=='z' || touche=='s' || touche=='q' || touche=='d') //commandes de dÃ©placement du curseur
             {
                 Curseur::deplacer(touche, ligneCurseurDamier, colonneCurseurDamier, ligneCurseurAffichage, colonneCurseurAffichage,
                                   origineCurseurLigne, origineCurseurColonne, ligneCurseurAffichageMax, colonneCurseurAffichageMax,
@@ -107,9 +109,10 @@ int Partie::deroulement(int mode, Console* pConsole, Damier* damier, char tour, 
 
             if(touche==13 && damier->getDamier()[ligneCurseurDamier][colonneCurseurDamier]==COUP_JOUABLE)
             {
-                damier->changement(tour, adv, ligneCurseurDamier, colonneCurseurDamier);
-                continuerTour=false;
-                damier->reset();
+                damier->ChangerCouleurPions(ligneCurseurDamier, colonneCurseurDamier, couleur_tour);
+                quitter=true;
+                damier->ReinitialiserPossibilites();
+                
                 rafraichirEcran = true;
             }
 
@@ -136,9 +139,9 @@ int Partie::deroulement(int mode, Console* pConsole, Damier* damier, char tour, 
         {
             pConsole->gotoLigCol(origineCurseurLigne-4, origineCurseurColonne);
 
-            GfxInfos::afficherTour(pConsole, tour);
-            GfxInfos::afficherScore(pConsole, damier);
-            damier->afficher(pConsole);
+            GfxInfos::AfficherTour(pConsole, couleur_tour);
+            GfxInfos::AfficherScore(pConsole, damier);
+            GfxDamier::AfficherContenu(pConsole, damier);
 
             pConsole->gotoLigCol(ligneCurseurAffichage, colonneCurseurAffichage);
 
@@ -150,9 +153,9 @@ int Partie::deroulement(int mode, Console* pConsole, Damier* damier, char tour, 
 return quitter;
 }
 
-bool Partie::verification(Damier* damier)
+bool Partie::CoupExistant(Damier* damier)
 {
-    bool ok = false;
+    bool coup_existant = false; //true : le joueur peut jouer un coup | false : le joueur n'a aucun coup possible
 
     for(int i=0 ; i<damier->getTaille() ; i++)
     {
@@ -160,14 +163,14 @@ bool Partie::verification(Damier* damier)
         {
             if(damier->getDamier()[i][j] == COUP_JOUABLE)
             {
-                ok = true;
-                break;
+                coup_existant = true;
+                break; //sortie de la premiere boucle pour
             }
         }
-        if(ok) break;
+        if(coup_existant) break; //sortie de la seconde boucle pour
     }
 
-    return ok;
+    return coup_existant;
 }
 
 void Partie::sauvegarde(Damier* d, int mode)

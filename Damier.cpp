@@ -10,8 +10,11 @@
 Damier::Damier(int _taille, int _ligneAffichage, int _colonneAffichage)
     :m_taille(_taille), m_ligneAffichage(_ligneAffichage), m_colonneAffichage(_colonneAffichage)
 {
-    //on crée un vecteur tampon
+    // Constructeur surchargé
+
+    // On crée un vecteur tampon
     std::vector<char> tmp;
+
     for(int i=0; i<m_taille; i++)
     {
         for(int j=0; j<m_taille;j++)
@@ -22,10 +25,21 @@ Damier::Damier(int _taille, int _ligneAffichage, int _colonneAffichage)
         tmp.clear();
     }
 
+    // Initialisation de la position des pions au début du jeu
     m_damier[3][3]='B';
     m_damier[3][4]='N';
     m_damier[4][3]='N';
     m_damier[4][4]='B';
+}
+
+Damier::Damier(Damier* copie)
+{
+    //constructeur par copie
+
+    m_taille = copie->getTaille();
+    m_ligneAffichage = copie->getLigneAffichage();
+    m_colonneAffichage = copie->getColonneAffichage();
+    m_damier = copie->getDamier();
 }
 
 Damier::~Damier()
@@ -33,13 +47,16 @@ Damier::~Damier()
     //destructeur
 }
 
-void Damier::coups(char tour, char adv, int ligne, int colonne)
+void Damier::CoupsPossibles(int ligne, int colonne, char couleur_tour)
 {
     // Référence des déplacements élémentaires selon les directions : N,S,E,W,NE,NW,SE,SW
     const int directions[8][2] = {{-1,0}, {1,0}, {0,1}, {0,-1}, {-1,1}, {-1,-1}, {1,1}, {1,-1}};
 
-    // Déplacements élémentaires
+    // Déplacements élémentaires (ligne et colonne)
     int dl = 0, dc = 0;
+
+    // Couleur de l'adversaire pendant ce tour
+    char couleur_adversaire = (couleur_tour == NOIR)? BLANC : NOIR;
 
     // Pour chacune des 8 directions
     for(auto delta : directions)
@@ -52,7 +69,7 @@ void Damier::coups(char tour, char adv, int ligne, int colonne)
            colonne + dc >= 0 && colonne + dc < TAILLE_PLATEAU) // Si la case adjacente est dans le plateau
         {
             // Tant qu'un pion ennemi est adjacent
-            while(m_damier[ligne+dl][colonne+dc] == adv)
+            while(m_damier[ligne+dl][colonne+dc] == couleur_adversaire)
             {
                 // Incrémentation des déplacements élémentaires
                 dl += delta[0];
@@ -70,19 +87,22 @@ void Damier::coups(char tour, char adv, int ligne, int colonne)
     }
 }
 
-void Damier::afficher(Console* _pConsole)
+void Damier::Afficher(Console* _pConsole)
 {
-    GfxDamier::afficher(_pConsole, this);
-    GfxDamier::afficherContenu(_pConsole, this);
+    GfxDamier::Afficher(_pConsole, this);
+    GfxDamier::AfficherContenu(_pConsole, this);
 }
 
-void Damier::changement(char tour, char adv, int ligne, int colonne)
+void Damier::ChangerCouleurPions(int ligne, int colonne, char couleur_tour)
 {
     // Référence des déplacements élémentaires selon les directions : N,S,E,W,NE,NW,SE,SW
     const int directions[8][2] = {{-1,0}, {1,0}, {0,1}, {0,-1}, {-1,1}, {-1,-1}, {1,1}, {1,-1}};
 
     // Déplacements élémentaires & coordonnées
     int dl = 0, dc = 0, x = 0, y = 0;
+
+    // Couleur de l'adversaire pendant ce tour
+    char couleur_adversaire = (couleur_tour == NOIR)? BLANC : NOIR;
 
     // Vecteur indiquant les pions à retourner
     std::vector<std::vector<int> > pions_a_retourner;
@@ -91,7 +111,7 @@ void Damier::changement(char tour, char adv, int ligne, int colonne)
     std::vector<int> coords;
 
     // On place un pion sur la case sélectionnée
-    m_damier[ligne][colonne] = tour;
+    m_damier[ligne][colonne] = couleur_tour;
 
     // Pour chacune des 8 directions
     for(auto delta : directions)
@@ -104,7 +124,7 @@ void Damier::changement(char tour, char adv, int ligne, int colonne)
            colonne + dc >= 0 && colonne + dc < TAILLE_PLATEAU) // Si la case adjacente est dans le plateau
         {
             // Tant qu'un pion ennemi est adjacent
-            while(m_damier[ligne+dl][colonne+dc] == adv)
+            while(m_damier[ligne+dl][colonne+dc] == couleur_adversaire)
             {
                 // On retient les coordonnées du pion adjacent pour changer sa couleur plus tard
                 coords.push_back(ligne+dl);
@@ -121,13 +141,13 @@ void Damier::changement(char tour, char adv, int ligne, int colonne)
                     break;
 
                 // Si la case d'après est un pion allié, on change de couleur les pions alignés
-                else if(m_damier[ligne+dl][colonne+dc] == tour)
+                else if(m_damier[ligne+dl][colonne+dc] == couleur_tour)
                 {
                     for(unsigned int id(0) ; id<pions_a_retourner.size() ; id++)
                     {
                         x = pions_a_retourner[id][0];
                         y = pions_a_retourner[id][1];
-                        m_damier[x][y] = tour; // La couleur du pion devient celle du joueur dont c'est le tour
+                        m_damier[x][y] = couleur_tour; // La couleur du pion devient celle du joueur dont c'est le tour
                     }
                 }
             }
@@ -137,7 +157,7 @@ void Damier::changement(char tour, char adv, int ligne, int colonne)
     }
 }
 
-void Damier::reset()
+void Damier::ReinitialiserPossibilites()
 {
     for(int i=0;i<m_taille;i++)
     {
@@ -151,7 +171,7 @@ void Damier::reset()
     }
 }
 
-int Damier::comptagePions(char _color)
+int Damier::CompterPions(char _color)
 {
     int n=0;
 

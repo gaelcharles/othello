@@ -6,23 +6,22 @@
 
 namespace GfxDamier
 {
-    void afficher(Console* _pConsole, Damier* _pDamier);
-    void afficherContenu(Console* _pConsole, Damier* _pDamier);
+    void Afficher(Console* _pConsole, Damier* _pDamier);
+    void AfficherContenu(Console* _pConsole, Damier* _pDamier);
 }
 
 namespace GfxInfos
 {
-    void afficherTour(Console* _pConsole, char tour);
-    void afficherScore(Console* _pConsole, Damier* _pDamier);
+    void AfficherTour(Console* _pConsole, char tour);
+    void AfficherScore(Console* _pConsole, Damier* _pDamier);
 }
 
 namespace GfxFin
 {
-    void afficherFin(Damier* _pDamier);
+    void AfficherFin(Damier* _pDamier);
 }
 
 namespace GfxMenu
 {
-    int afficher(Damier* damier, Console* _pConsole, IA* _bot);
-    int echap(Console* _pConsole, int mode, Damier* d);
+    int Afficher(Console* _pConsole, IA* _bot);
 }

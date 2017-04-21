@@ -6,15 +6,14 @@
 #include <vector>
 #include <sstream>
 #include <Windows.h>
-#include <MMsystem.h>
 
-void GfxDamier::afficher(Console* _pConsole, Damier* _pDamier)
+void GfxDamier::Afficher(Console* _pConsole, Damier* _pDamier)
 /**********************************************************************************************
  * \brief Afficher : Affiche en console le plateau de jeu                                     *
- * \author Gaël                                                                               *
+ * \author GaÃ«l                                                                               *
  *                                                                                            *
  * \param _pConsole : Pointeur sur l'instance de console                                      *
- * \param _pDamier : Pointeur sur le damier à afficher                                        *
+ * \param _pDamier : Pointeur sur le damier Ã  afficher                                        *
  * \return (void)                                                                             *
  *                                                                                            *
  **********************************************************************************************/
@@ -28,12 +27,12 @@ void GfxDamier::afficher(Console* _pConsole, Damier* _pDamier)
     // Positionnement initial
     _pConsole->gotoLigCol(origineLig, origineCol);
 
-    // Première ligne de bordures
+    // PremiÃ¨re ligne de bordures
     std::cout << BORDURE_ANGLE_HG << BORDURE_BARRE_HORZ << BORDURE_BARRE_HORZ << BORDURE_BARRE_HORZ;
     for(int i(0) ; i<_pDamier->getTaille()-1 ; i++)
         std::cout << BORDURE_INTER3_BAS << BORDURE_BARRE_HORZ << BORDURE_BARRE_HORZ << BORDURE_BARRE_HORZ;
     std::cout << BORDURE_ANGLE_HD;
-    _pConsole->gotoLigCol(origineLig+1, origineCol); // Retour à la ligne
+    _pConsole->gotoLigCol(origineLig+1, origineCol); // Retour Ã  la ligne
 
     // Bordures des 64 cases
     for(int i(0) ; i<=_pDamier->getTaille() ; i++)
@@ -42,27 +41,27 @@ void GfxDamier::afficher(Console* _pConsole, Damier* _pDamier)
         for(int j(0) ; j<_pDamier->getTaille() ; j++)
             std::cout << BORDURE_BARRE_VERT << "   ";
         std::cout << BORDURE_BARRE_VERT;
-        _pConsole->gotoLigCol(origineLig+2*i+1, origineCol); // Retour à la ligne
+        _pConsole->gotoLigCol(origineLig+2*i+1, origineCol); // Retour Ã  la ligne
 
         // Barres horizontales
         if(i != _pDamier->getTaille())
         {
-            _pConsole->gotoLigCol(origineLig+2*i+2, origineCol); // Retour à la ligne
+            _pConsole->gotoLigCol(origineLig+2*i+2, origineCol); // Retour Ã  la ligne
             std::cout << BORDURE_INTER3_DROITE << BORDURE_BARRE_HORZ << BORDURE_BARRE_HORZ << BORDURE_BARRE_HORZ;
             for(int j(0) ; j<_pDamier->getTaille()-1 ; j++)
                 std::cout << BORDURE_INTER4 << BORDURE_BARRE_HORZ << BORDURE_BARRE_HORZ << BORDURE_BARRE_HORZ;
             std::cout << BORDURE_INTER3_GAUCHE;
-            _pConsole->gotoLigCol(origineLig+2*i+1, origineCol); // Retour à la ligne
+            _pConsole->gotoLigCol(origineLig+2*i+1, origineCol); // Retour Ã  la ligne
         }
     }
-    // Dernière ligne de bordures
-    _pConsole->gotoLigCol(origineLig+2*TAILLE_PLATEAU, origineCol); // Retour à la ligne
+    // DerniÃ¨re ligne de bordures
+    _pConsole->gotoLigCol(origineLig+2*TAILLE_PLATEAU, origineCol); // Retour Ã  la ligne
     std::cout << BORDURE_ANGLE_BG << BORDURE_BARRE_HORZ << BORDURE_BARRE_HORZ << BORDURE_BARRE_HORZ;
     for(int i(0) ; i<_pDamier->getTaille()-1 ; i++)
         std::cout << BORDURE_INTER3_HAUT << BORDURE_BARRE_HORZ << BORDURE_BARRE_HORZ << BORDURE_BARRE_HORZ;
     std::cout << BORDURE_ANGLE_BD;
 
-    // Coordonnées des cases sur les bordures
+    // CoordonnÃ©es des cases sur les bordures
     _pConsole->setColor(COULEUR_BLANC, COULEUR_MARRON);
     for(int dl : dep_lig)
     {
@@ -87,13 +86,13 @@ void GfxDamier::afficher(Console* _pConsole, Damier* _pDamier)
     _pConsole->setColor(COULEUR_BLANC, COULEUR_VERT);
 }
 
-void GfxDamier::afficherContenu(Console* _pConsole, Damier* _pDamier)
+void GfxDamier::AfficherContenu(Console* _pConsole, Damier* _pDamier)
 /**********************************************************************************************
  * \brief afficherContenu : Affiche le contenu des cases du damier                            *
- * \author Camille, Gaël                                                                      *
+ * \author Camille, GaÃ«l                                                                      *
  *                                                                                            *
  * \param _pConsole : Pointeur sur l'instance de console                                      *
- * \param _pDamier : Pointeur sur le damier à afficher                                        *
+ * \param _pDamier : Pointeur sur le damier Ã  afficher                                        *
  * \return (void)                                                                             *
  *                                                                                            *
  **********************************************************************************************/
@@ -106,7 +105,7 @@ void GfxDamier::afficherContenu(Console* _pConsole, Damier* _pDamier)
     {
         for(int j(0) ; j<_pDamier->getTaille() ; j++)
         {
-            // Déplacement à la case associée
+            // DÃ©placement Ã  la case associÃ©e
             _pConsole->gotoLigCol(2*i+origineLig, 4*j+origineCol);
 
             // Affichage du contenu
@@ -132,12 +131,12 @@ void GfxDamier::afficherContenu(Console* _pConsole, Damier* _pDamier)
                     std::cout << ' ';
                 }
             }
-            _pConsole->setColor(COULEUR_BLANC, COULEUR_VERT); // Par défaut
+            _pConsole->setColor(COULEUR_BLANC, COULEUR_VERT); // Par dÃ©faut
         }
     }
 }
 
-void GfxInfos::afficherTour(Console* _pConsole, char tour)
+void GfxInfos::AfficherTour(Console* _pConsole, char tour)
 /**********************************************************************************************
  * \brief afficherTour : indique quel joueur doit jouer ce tour                               *
  * \author Camille                                                                            *
@@ -162,24 +161,24 @@ void GfxInfos::afficherTour(Console* _pConsole, char tour)
         _pConsole->setColor(COULEUR_BLANC, COULEUR_VERT);
         std::cout << CARAC_CARRE << " blancs " << CARAC_CARRE;
     }
-    _pConsole->setColor(COULEUR_BLANC, COULEUR_VERT); // Par défaut
+    _pConsole->setColor(COULEUR_BLANC, COULEUR_VERT); // Par dÃ©faut
 }
 
-void GfxInfos::afficherScore(Console* _pConsole, Damier* _pDamier)
+void GfxInfos::AfficherScore(Console* _pConsole, Damier* _pDamier)
 {
     _pConsole->gotoLigCol(_pDamier->getLigneAffichage()+20, _pDamier->getColonneAffichage()+2);
     _pConsole->setColor(COULEUR_NOIR, COULEUR_VERT);
-    std::cout << CARAC_CARRE << ' ' << _pDamier->comptagePions(NOIR) << " pions noirs";
+    std::cout << CARAC_CARRE << ' ' << _pDamier->CompterPions(NOIR) << " pions noirs";
 
     _pConsole->gotoLigCol(_pDamier->getLigneAffichage()+21, _pDamier->getColonneAffichage()+2);
     _pConsole->setColor(COULEUR_BLANC, COULEUR_VERT);
-    std::cout << CARAC_CARRE << ' ' << _pDamier->comptagePions(BLANC) << " pions blancs";
+    std::cout << CARAC_CARRE << ' ' << _pDamier->CompterPions(BLANC) << " pions blancs";
 }
 
-void GfxFin::afficherFin(Damier* _pDamier)
+void GfxFin::AfficherFin(Damier* _pDamier)
 {
-    int n = _pDamier->comptagePions(NOIR);
-    int b = _pDamier->comptagePions(BLANC);
+    int n = _pDamier->CompterPions(NOIR);
+    int b = _pDamier->CompterPions(BLANC);
 
     std::cout << "Partie terminee " << std::endl;
 
@@ -192,7 +191,7 @@ void GfxFin::afficherFin(Damier* _pDamier)
     system("pause");
 }
 
-int GfxMenu::afficher(Damier* damier, Console* _pConsole, IA* _bot)
+int GfxMenu::Afficher(Console* _pConsole, IA* _bot)
 {
     // Variables
     int choix = 0, difficulte = 0;
@@ -218,7 +217,7 @@ int GfxMenu::afficher(Damier* damier, Console* _pConsole, IA* _bot)
         std::cin >> choix;
     }while(choix!=0 && choix != 1 && choix != 2 && choix != 3);
 
-    if (choix == 0) //continuer partie sauvegardée
+    if (choix == 0) //continuer partie sauvegardÃ©e
     {
         choix = damier->chargement();
     }
@@ -230,12 +229,14 @@ int GfxMenu::afficher(Damier* damier, Console* _pConsole, IA* _bot)
         std::cout << "          ___  _   _          _ _\n         / _ \\| |_| |__   ___| | | ___\n        | | | | __|  _ \\ / _ \\ | |/ _ \\\n        | |_| | |_| | | |  __/ | | (_) |\n         \\___/ \\__|_| |_|\\___|_|_|\\___/";
         _pConsole->gotoLigCol(9, 11);
         std::cout << "1. Facile";
-        // 2. Moyen, 3. Difficile
+        _pConsole->gotoLigCol(10, 11);
+        std::cout << "2. Moyen";
+        // 3. Difficile
         do
         {
             _pConsole->gotoLigCol(11, 11);
             std::cin >> difficulte;
-        }while(difficulte != 1);
+        }while(difficulte != 1 && difficulte != 2);
 
         _bot->setDifficulte(difficulte);
     }

@@ -1,64 +1,68 @@
-#include "Damier.h"
 #include "console.h"
 #include "Affichage.h"
 #include "Evenements.h"
+#include "Damier.h"
 #include "IA.h"
 
 #include <iostream>
 #include <Windows.h>
-#include <MMsystem.h> // ???
-
 
 int main()
 {
     srand(time(NULL));
 
-    // Variables
-    Console* pConsole = NULL;
-    Damier* damier = new Damier(TAILLE_PLATEAU, LIGNE_AFFICHAGE, COLONNE_AFFICHAGE);
-    char tour=NOIR, adv=BLANC;
-    const int origineCurseur = 7;
-    bool quitter = false;
-    const int finCurseur = 11;
-    int quitter = 0;
+    // Variables du main
+    Console* pConsole = NULL; //pointeur sur une instance de console
 
-    bool verif=false;
-    int choix;
-    IA* bot = new IA;
+    Damier* pDamier = new Damier(TAILLE_PLATEAU, LIGNE_AFFICHAGE, COLONNE_AFFICHAGE); //pointeur sur une instance du damier
 
-    pConsole = Console::getInstance();
+    char couleur_tour = NOIR; //couleur du joueur pendant le tour (les pions noirs commencent)
 
-    choix = GfxMenu::afficher(damier, pConsole, bot);
-    if(choix == 3) exit(0);
+    const int origineCurseur = 7; //origine d'affichage du curseur
 
-    // Passe la console en texte blanc sur fond vert
-    pConsole->setColor(COULEUR_BLANC, COULEUR_VERT);
-    system("cls");
+    bool quitter = false; //bool�en de d�tection de fin de partie
+    bool verif = false;
+    int choix; //contient la valeur du choix de l'utilisateur pour le menu
+
+    IA* ordinateur = new IA; //pointeur sur une instance de l'ordinateur (IA)
+
+    pConsole = Console::getInstance(); //on r�cup�re le pointeur sur l'instance console
+
+    choix = GfxMenu::Afficher(pConsole, ordinateur);
+
+    if(choix == 3)
+        exit(0);
+
+    pConsole->setColor(COULEUR_BLANC, COULEUR_VERT); //passe la console en texte blanc sur fond vert
+    system("cls"); //on efface la console
 
     while(!quitter)
     {
-        // On cherche les coups jouables
-        for(int i=0 ; i<damier->getTaille() ; i++)
+        //pour tous les coups jouables
+        for(int i=0 ; i<pDamier->getTaille() ; i++)
         {
-            for(int j=0 ; j<damier->getTaille() ; j++)
+            for(int j=0 ; j<pDamier->getTaille() ; j++)
             {
-                if(damier->getDamier()[i][j] == tour)
-                    damier->coups(tour, adv, i, j);
+                if(pDamier->getDamier()[i][j] == couleur_tour)
+                    pDamier->CoupsPossibles(i, j, couleur_tour);
             }
         }
 
-        if(Partie::verification(damier))
+        if(Partie::CoupExistant(pDamier)) //si l'utilisateur peut jouer un coup
         {
             verif = false;
+          
             pConsole->gotoLigCol(origineCurseur, 8);
-            if(choix == 2) // Deux joueurs
-                quitter=Partie::deroulement(choix, pConsole, damier, tour, adv);
-            else if(choix == 1) // Un joueur
+
+            //d�roulement du tour du joueur actuel
+            if(choix == 2) //deux joueurs
+                quitter=Partie::TourJoueur(pConsole, pDamier, couleur_tour);
+            else if(choix == 1) //un joueur
             {
-                if(tour == BLANC) // Tour de l'IA
-                    quitter = bot->deroulement(pConsole, damier, tour, adv);
+                if(couleur_tour == BLANC) //si c'est au tour de l'ordinateur
+                    quitter = ordinateur->TourOrdinateur(pConsole, pDamier, couleur_tour); //l'ordinateur effectue son tour
                 else
-                    quitter = Partie::deroulement(choix, pConsole, damier, tour, adv);
+                    quitter = Partie::TourJoueur(pConsole, pDamier, couleur_tour); //sinon le joueur effectue son tour
             }
         }
         else
@@ -72,28 +76,23 @@ int main()
                 verif=true;
             }
             else
-            {
-                quitter=1;
-            }
+                quitter=true;
         }
 
-        if(tour==BLANC)
-        {
-             tour=NOIR;
-             adv=BLANC;
-        }
+        //d�finit la couleur des pions du joueur pour le tour suivant
+        if(couleur_tour == NOIR)
+             couleur_tour = BLANC;
         else
-        {
-             tour=BLANC;
-             adv=NOIR;
-        }
-
+             couleur_tour = NOIR;
     }
 
     // Fin de partie
-    //Si la partie se termine parce que l'un des deux a gagné, on affiche le score
-    if(quitter == 1) GfxFin::afficherFin(damier);
+    GfxFin::AfficherFin(pDamier);
+
+    // On efface les allocations m�moires
     Console::deleteInstance();
-    delete damier;
+    delete pDamier;
+
+    // Fin du programme
     return 0;
 }
