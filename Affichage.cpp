@@ -5,9 +5,8 @@
 #include <vector>
 #include <sstream>
 #include <Windows.h>
-#include <MMsystem.h>
 
-void GfxDamier::afficher(Console* _pConsole, Damier* _pDamier)
+void GfxDamier::Afficher(Console* _pConsole, Damier* _pDamier)
 /**********************************************************************************************
  * \brief Afficher : Affiche en console le plateau de jeu                                     *
  * \author Gaël                                                                               *
@@ -86,7 +85,7 @@ void GfxDamier::afficher(Console* _pConsole, Damier* _pDamier)
     _pConsole->setColor(COULEUR_BLANC, COULEUR_VERT);
 }
 
-void GfxDamier::afficherContenu(Console* _pConsole, Damier* _pDamier)
+void GfxDamier::AfficherContenu(Console* _pConsole, Damier* _pDamier)
 /**********************************************************************************************
  * \brief afficherContenu : Affiche le contenu des cases du damier                            *
  * \author Camille, Gaël                                                                      *
@@ -136,7 +135,7 @@ void GfxDamier::afficherContenu(Console* _pConsole, Damier* _pDamier)
     }
 }
 
-void GfxInfos::afficherTour(Console* _pConsole, char tour)
+void GfxInfos::AfficherTour(Console* _pConsole, char tour)
 /**********************************************************************************************
  * \brief afficherTour : indique quel joueur doit jouer ce tour                               *
  * \author Camille                                                                            *
@@ -164,21 +163,21 @@ void GfxInfos::afficherTour(Console* _pConsole, char tour)
     _pConsole->setColor(COULEUR_BLANC, COULEUR_VERT); // Par défaut
 }
 
-void GfxInfos::afficherScore(Console* _pConsole, Damier* _pDamier)
+void GfxInfos::AfficherScore(Console* _pConsole, Damier* _pDamier)
 {
     _pConsole->gotoLigCol(_pDamier->getLigneAffichage()+20, _pDamier->getColonneAffichage()+2);
     _pConsole->setColor(COULEUR_NOIR, COULEUR_VERT);
-    std::cout << CARAC_CARRE << ' ' << _pDamier->comptagePions(NOIR) << " pions noirs";
+    std::cout << CARAC_CARRE << ' ' << _pDamier->CompterPions(NOIR) << " pions noirs";
 
     _pConsole->gotoLigCol(_pDamier->getLigneAffichage()+21, _pDamier->getColonneAffichage()+2);
     _pConsole->setColor(COULEUR_BLANC, COULEUR_VERT);
-    std::cout << CARAC_CARRE << ' ' << _pDamier->comptagePions(BLANC) << " pions blancs";
+    std::cout << CARAC_CARRE << ' ' << _pDamier->CompterPions(BLANC) << " pions blancs";
 }
 
-void GfxFin::afficherFin(Damier* _pDamier)
+void GfxFin::AfficherFin(Damier* _pDamier)
 {
-    int n = _pDamier->comptagePions(NOIR);
-    int b = _pDamier->comptagePions(BLANC);
+    int n = _pDamier->CompterPions(NOIR);
+    int b = _pDamier->CompterPions(BLANC);
 
     std::cout << "Partie terminee " << std::endl;
 
@@ -191,7 +190,7 @@ void GfxFin::afficherFin(Damier* _pDamier)
     system("pause");
 }
 
-int GfxMenu::afficher(Console* _pConsole, IA* _bot)
+int GfxMenu::Afficher(Console* _pConsole, IA* _bot)
 {
     // Variables
     int choix = 0, difficulte = 0;
@@ -222,12 +221,14 @@ int GfxMenu::afficher(Console* _pConsole, IA* _bot)
         std::cout << "          ___  _   _          _ _\n         / _ \\| |_| |__   ___| | | ___\n        | | | | __|  _ \\ / _ \\ | |/ _ \\\n        | |_| | |_| | | |  __/ | | (_) |\n         \\___/ \\__|_| |_|\\___|_|_|\\___/";
         _pConsole->gotoLigCol(9, 11);
         std::cout << "1. Facile";
-        // 2. Moyen, 3. Difficile
+        _pConsole->gotoLigCol(10, 11);
+        std::cout << "2. Moyen";
+        // 3. Difficile
         do
         {
             _pConsole->gotoLigCol(11, 11);
             std::cin >> difficulte;
-        }while(difficulte != 1);
+        }while(difficulte != 1 && difficulte != 2);
 
         _bot->setDifficulte(difficulte);
     }

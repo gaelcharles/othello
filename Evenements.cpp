@@ -48,9 +48,9 @@ void Curseur::deplacer(char _key, int& _ligneCurseurDamier, int& _colonneCurseur
     }
 }
 
-bool Partie::deroulement(Console* pConsole, Damier* damier, char tour, char adv)
+bool Partie::TourJoueur(Console* pConsole, Damier* damier, char couleur_tour)
 {
-    /// DECLARATION DES VARIABLES D'AFFICHAGE DU CURSEUR DU DAMIER
+    // DECLARATION DES VARIABLES D'AFFICHAGE DU CURSEUR DU DAMIER
 
     //initialisation des valeurs constantes du sous-programme
     const int origineCurseurLigne = damier->getLigneAffichage()+1;
@@ -63,9 +63,8 @@ bool Partie::deroulement(Console* pConsole, Damier* damier, char tour, char adv)
     int ligneCurseurAffichageMax, colonneCurseurAffichageMax;
     int ligneCurseurDamierMax, colonneCurseurDamierMax;
 
-    /// INITIALISATION DES VARIABLES
+    // INITIALISATION DES VARIABLES
 
-    /// DEBUT VARIABLES CURSEUR
     //coordonnées réelles de la case pointée par le curseur
     ligneCurseurDamier = 0;
     colonneCurseurDamier = 0;
@@ -82,10 +81,13 @@ bool Partie::deroulement(Console* pConsole, Damier* damier, char tour, char adv)
     ligneCurseurAffichage = origineCurseurLigne;
     colonneCurseurAffichage = origineCurseurColonne;
 
+    // Couleur de l'adversaire pendant ce tour
+//    char couleur_adversaire = (couleur_tour == NOIR)? BLANC : NOIR;
+
     bool rafraichirEcran = true; //pour rentrer dès le début dans la boucle d'affichage
     bool quitter=false;
 
-    GfxDamier::afficher(pConsole, damier);
+    GfxDamier::Afficher(pConsole, damier);
 
     while(!quitter)
     {
@@ -106,9 +108,9 @@ bool Partie::deroulement(Console* pConsole, Damier* damier, char tour, char adv)
 
             if(touche==13 && damier->getDamier()[ligneCurseurDamier][colonneCurseurDamier]==COUP_JOUABLE)
             {
-                damier->changement(tour, adv, ligneCurseurDamier, colonneCurseurDamier);
+                damier->ChangerCouleurPions(ligneCurseurDamier, colonneCurseurDamier, couleur_tour);
                 quitter=true;
-                damier->reset();
+                damier->ReinitialiserPossibilites();
                 rafraichirEcran = true;
             }
         }
@@ -117,9 +119,9 @@ bool Partie::deroulement(Console* pConsole, Damier* damier, char tour, char adv)
         {
             pConsole->gotoLigCol(origineCurseurLigne-4, origineCurseurColonne);
 
-            GfxInfos::afficherTour(pConsole, tour);
-            GfxInfos::afficherScore(pConsole, damier);
-            GfxDamier::afficherContenu(pConsole, damier);
+            GfxInfos::AfficherTour(pConsole, couleur_tour);
+            GfxInfos::AfficherScore(pConsole, damier);
+            GfxDamier::AfficherContenu(pConsole, damier);
 
             pConsole->gotoLigCol(ligneCurseurAffichage, colonneCurseurAffichage);
 
@@ -131,9 +133,9 @@ bool Partie::deroulement(Console* pConsole, Damier* damier, char tour, char adv)
 return false;
 }
 
-bool Partie::verification(Damier* damier)
+bool Partie::CoupExistant(Damier* damier)
 {
-    bool ok = false;
+    bool coup_existant = false; //true : le joueur peut jouer un coup | false : le joueur n'a aucun coup possible
 
     for(int i=0 ; i<damier->getTaille() ; i++)
     {
@@ -141,12 +143,12 @@ bool Partie::verification(Damier* damier)
         {
             if(damier->getDamier()[i][j] == COUP_JOUABLE)
             {
-                ok = true;
-                break;
+                coup_existant = true;
+                break; //sortie de la premiere boucle pour
             }
         }
-        if(ok) break;
+        if(coup_existant) break; //sortie de la seconde boucle pour
     }
 
-    return ok;
+    return coup_existant;
 }

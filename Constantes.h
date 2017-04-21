@@ -19,7 +19,7 @@
 
 #define BLANC 'B'
 #define NOIR 'N'
-
+#define COUP_JOUABLE '.'
 
 /// CONSTANTES ///
 

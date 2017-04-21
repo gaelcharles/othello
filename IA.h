@@ -10,15 +10,17 @@ class IA
     private :
         int m_difficulte; // 1: facile (aléatoire)
     public :
-        // C & D
+        // Constructeur & Destructeur
         IA();
         ~IA();
 
-        // Méthodes
-        bool deroulement(Console* _pConsole, Damier* _pDamier, char _tour, char _adv);
-        std::vector<int> ChooseRandomCell(Damier* _pDamier);
+        // Méthodes de la classe
+        std::vector<std::vector<int>> CasesJouables(Damier* _pDamier);
+        int Min(Damier* _etat_actuel, int _profondeur, char _couleur_tour);
+        int Max(Damier* _etat_actuel, int _profondeur, char _couleur_tour);
+        bool TourOrdinateur(Console* _pConsole, Damier* _pDamier, char couleur_tour);
 
-        // G & S
+        // Getters & Setters
         int getDifficulte() const { return m_difficulte; }
         void setDifficulte(int _difficulte);
 };

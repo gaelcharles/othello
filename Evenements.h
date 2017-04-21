@@ -19,8 +19,8 @@ namespace Curseur
 
 namespace Partie
 {
-    bool deroulement(Console* pConsole, Damier* damier, char tour, char adv);
-    bool verification(Damier* damier);
+    bool TourJoueur(Console* pConsole, Damier* damier, char couleur_tour);
+    bool CoupExistant(Damier* damier);
 }
 
 
