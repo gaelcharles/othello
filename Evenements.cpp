@@ -215,12 +215,8 @@ bool Partie::CoupExistant(Damier* _pDamier)
                 break; //sortie de la premiere boucle
             }
         }
-        if(coup_existant)
-            break; //sortie de la seconde boucle
+        if(coup_existant) break; //sortie de la seconde boucle
     }
-
-    std::cout << coup_existant;
-    system("pause");
 
     return coup_existant;
 }

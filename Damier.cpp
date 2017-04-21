@@ -151,7 +151,7 @@ void Damier::ReinitialiserPossibilites()
     }
 }
 
-int Damier::CompterPions(char _coleur)
+int Damier::CompterPions(char _couleur)
 {
     int n=0;
 
@@ -159,7 +159,7 @@ int Damier::CompterPions(char _coleur)
     {
         for(int j=0;j<m_taille;j++)
         {
-            if(m_damier[i][j]==_coleur)
+            if(m_damier[i][j]==_couleur)
             {
                 n++;
             }

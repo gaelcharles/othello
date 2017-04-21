@@ -21,7 +21,7 @@ int main()
     IA* pOrdinateur = new IA; //pointeur sur une instance de l'ordinateur
     FenetreAllegro* pAllegro = new FenetreAllegro();
 
-    char couleur_tour; //couleur des pions du joueur actuel
+    char couleur_tour = NOIR; //couleur des pions du joueur actuel
     const int origineCurseurLigne = 7, origineCurseurColonne = 8; //coordonnees d'origine pour l'affichage du pointeur
     int quitter = 0; //booleen de dectection de fin de partie
     int choix; //choix de l'utilisateur pour le menu
