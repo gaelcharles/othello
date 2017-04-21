@@ -19,6 +19,7 @@
 
 #define BLANC 'B'
 #define NOIR 'N'
+#define COUP_JOUABLE '.'
 
 
 /// CONSTANTES ///
@@ -26,5 +27,11 @@
 #define TAILLE_PLATEAU 8
 #define LIGNE_AFFICHAGE 5
 #define COLONNE_AFFICHAGE 4
+
+// Allegro
+#define ALLEG_TCASE 60
+#define ALLEG_COULEUR_VERT makecol(46,119,57)
+#define ALLEG_COULEUR_MARRON makecol(110,35,12)
+#define ALLEG_COULEUR_PALE makecol(187,250,141)
 
 #endif // CONSTANTES_H_INCLUDED

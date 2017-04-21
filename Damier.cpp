@@ -22,10 +22,10 @@ Damier::Damier(int _taille, int _ligneAffichage, int _colonneAffichage)
         tmp.clear();
     }
 
-    m_damier[3][3]='B';
-    m_damier[3][4]='N';
-    m_damier[4][3]='N';
-    m_damier[4][4]='B';
+    m_damier[3][3]=BLANC;
+    m_damier[3][4]=NOIR;
+    m_damier[4][3]=NOIR;
+    m_damier[4][4]=BLANC;
 }
 
 Damier::~Damier()

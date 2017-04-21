@@ -5,9 +5,11 @@
 #include "Constantes.h"
 #include "Console.h"
 #include "Affichage.h"
+#include "FenetreAllegro.h"
 
 #include <iostream>
-#include <windows.h>
+#include <allegro.h>
+#include <winalleg.h>
 #include <time.h>
 #include <fstream>
 
@@ -20,7 +22,7 @@ namespace Curseur
 
 namespace Partie
 {
-    int deroulement(int mode, Console* pConsole, Damier* damier, char tour, char adv);
+    int deroulement(int mode, Console* pConsole, Damier* damier, FenetreAllegro* pAllegro, char tour, char adv);
     bool verification(Damier* damier);
     void sauvegarde(Damier* d, int mode);
 

@@ -2,7 +2,8 @@
 #include "Affichage.h"
 #include "Constantes.h"
 #include <cstdlib>
-#include <windows.h>
+#include <allegro.h>
+#include <winalleg.h>
 
 // Constructeur
 IA::IA() :

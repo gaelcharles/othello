@@ -5,7 +5,8 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
-#include <Windows.h>
+#include <allegro.h>
+#include <winalleg.h>
 #include <MMsystem.h>
 
 void GfxDamier::afficher(Console* _pConsole, Damier* _pDamier)

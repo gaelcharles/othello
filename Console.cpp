@@ -1,6 +1,7 @@
 #include "Console.h"
 #include <conio.h>
-#include <windows.h>
+#include <allegro.h>
+#include <winalleg.h>
 
 Console* Console::m_instance = NULL;
 

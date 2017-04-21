@@ -3,9 +3,11 @@
 #include "Affichage.h"
 #include "Evenements.h"
 #include "IA.h"
+#include "FenetreAllegro.h"
 
 #include <iostream>
-#include <Windows.h>
+#include <allegro.h>
+#include <winalleg.h>
 #include <MMsystem.h> // ???
 
 
@@ -16,10 +18,10 @@ int main()
     // Variables
     Console* pConsole = NULL;
     Damier* damier = new Damier(TAILLE_PLATEAU, LIGNE_AFFICHAGE, COLONNE_AFFICHAGE);
+    FenetreAllegro* pAllegro = new FenetreAllegro();
+
     char tour=NOIR, adv=BLANC;
-    const int origineCurseur = 7;
-    bool quitter = false;
-    const int finCurseur = 11;
+    const int origineCurseurL = 7, origineCurseurC = 8;
     int quitter = 0;
 
     bool verif=false;
@@ -50,15 +52,15 @@ int main()
         if(Partie::verification(damier))
         {
             verif = false;
-            pConsole->gotoLigCol(origineCurseur, 8);
+            pConsole->gotoLigCol(origineCurseurL, origineCurseurC);
             if(choix == 2) // Deux joueurs
-                quitter=Partie::deroulement(choix, pConsole, damier, tour, adv);
+                quitter=Partie::deroulement(choix, pConsole, damier, pAllegro, tour, adv);
             else if(choix == 1) // Un joueur
             {
                 if(tour == BLANC) // Tour de l'IA
                     quitter = bot->deroulement(pConsole, damier, tour, adv);
                 else
-                    quitter = Partie::deroulement(choix, pConsole, damier, tour, adv);
+                    quitter = Partie::deroulement(choix, pConsole, damier, pAllegro, tour, adv);
             }
         }
         else
@@ -91,9 +93,14 @@ int main()
     }
 
     // Fin de partie
-    //Si la partie se termine parce que l'un des deux a gagnÃ©, on affiche le score
+    //Si la partie se termine parce que l'un des deux a gagné, on affiche le score
     if(quitter == 1) GfxFin::afficherFin(damier);
+
+    // Fin de programme
     Console::deleteInstance();
     delete damier;
+    delete bot;
+    delete pAllegro;
     return 0;
 }
+END_OF_MAIN();
