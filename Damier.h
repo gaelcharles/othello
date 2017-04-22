@@ -23,7 +23,7 @@ class Damier
         void ChangerCouleurPions(int _ligne, int _colonne, char _couleur_tour); //retourne les pions selon le pion joue aux coordonnees en parametres
         void ReinitialiserPossibilites(); //retourne le nombre de pions de la couleur du joueur en parametre
         int CompterPions(char _couleur); //retourne le nombre de pions de la couleur en parametre
-        int Chargement();
+        int Chargement(char& _couleur_tour); //charge une partie sauvegardée
 
     private:
         int m_taille; //nombre de lignes et de colonnes du damier

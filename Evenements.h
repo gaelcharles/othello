@@ -24,7 +24,7 @@ namespace Partie
 {
     int TourJoueur(int mode, Console* _pConsole, Damier* _pDamier, FenetreAllegro* pAllegro, char _couleur_tour);
     bool CoupExistant(Damier* _pDamier);
-    void Sauvegarde(Damier* _pDamier, int mode);
+    void Sauvegarde(Damier* _pDamier, int mode, char _couleur_tour);
 
 }
 
