@@ -242,13 +242,15 @@ int GfxMenu::Afficher(Damier* _pDamier, Console* _pConsole, IA* _bot, char& _cou
         _pConsole->gotoLigCol(2, 0);
         std::cout << MENU_ASCII_ART;
         _pConsole->gotoLigCol(9, 11);
-        std::cout << "1. Facile";
-        // 2. Moyen, 3. Difficile
+        std::cout << "1. Facile (Aleatoire)";
+        _pConsole->gotoLigCol(10, 11);
+        std::cout << "2. Moyen (Minimax)";
+        // 3. Difficile
         do
         {
             _pConsole->gotoLigCol(11, 11);
             std::cin >> mode;
-        }while(mode != 1);
+        }while(mode != 1 && mode != 2);
 
         _bot->setDifficulte(mode);
     }

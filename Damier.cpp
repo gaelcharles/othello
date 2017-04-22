@@ -28,9 +28,24 @@ Damier::Damier(int _taille, int _ligneAffichage, int _colonneAffichage)
     m_damier[4][4]=BLANC;
 }
 
+Damier::Damier(Damier* _pCopie)
+{
+    //Constructeur par copie
+    m_taille = _pCopie->getTaille();
+    m_ligneAffichage = _pCopie->getLigneAffichage();
+    m_colonneAffichage = _pCopie->getColonneAffichage();
+    m_damier = _pCopie->getDamier();
+}
+
 Damier::~Damier()
 {
     //destructeur
+}
+
+void Damier::setCaseDamier(int _ligne, int _colonne, char _valeur)
+{
+    if(_valeur == ' ' || _valeur == COUP_JOUABLE || _valeur == NOIR || _valeur == BLANC) //cases possibles du damier
+        m_damier[_ligne][_colonne] = _valeur; //change la valeur de la case aux coordonnees (_ligne, _colonne)
 }
 
 void Damier::CoupsPossibles(int _ligne, int _colonne, char _couleur_tour)

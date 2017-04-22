@@ -8,8 +8,9 @@ class Damier
 {
     public:
 
-        Damier(int _taille, int _ligneAffichage, int _colonneAffichage);
-        ~Damier();
+        Damier(int _taille, int _ligneAffichage, int _colonneAffichage); //constructeur surcharge
+        Damier(Damier* _pDamier); //constructeur par copie
+        ~Damier(); //destructeur
 
         //Getters
         int getTaille() const { return m_taille; }
@@ -17,11 +18,14 @@ class Damier
         int getColonneAffichage() const { return m_colonneAffichage; }
         std::vector< std::vector<char> > getDamier() { return m_damier; }
 
+        //setter
+        void setCaseDamier(int _ligne, int _colonne, char _valeur);
+
         //Methodes de la classe
         void Afficher(Console* _pConsole); //affiche le damier à partir du coin superieur gauche (point d'affichage)
         void CoupsPossibles(int _ligne, int _colonne, char _couleur_tour); //cherche tous les coups possibles pour un joueur
         void ChangerCouleurPions(int _ligne, int _colonne, char _couleur_tour); //retourne les pions selon le pion joue aux coordonnees en parametres
-        void ReinitialiserPossibilites(); //retourne le nombre de pions de la couleur du joueur en parametre
+        void ReinitialiserPossibilites(); //reinitialise le type des cases de type COUP_JOUABLE
         int CompterPions(char _couleur); //retourne le nombre de pions de la couleur en parametre
         int Chargement(char& _couleur_tour); //charge une partie sauvegardée
 
