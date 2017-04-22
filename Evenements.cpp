@@ -87,13 +87,17 @@ int Partie::TourJoueur(int mode, Console* _pConsole, Damier* _pDamier, FenetreAl
     int quitter = 0;
     char touche = 0;
 
+    std::vector<Etat*> arbre_recherche;
+
+    // Affichage du damier
     GfxDamier::Afficher(_pConsole, _pDamier);
 
+    // Boucle de tour de jeu (sortie de boucle à la fin du tour)
     while(continuer_tour)
     {
         continuer_tour = true;
 
-        if(!_pAllegro->IsAllegroActive()) // Allegro désactivé
+        if(!_pAllegro->IsAllegroActive()) // Si Allegro désactivé
         {
             // GESTIONS DES EVENEMENTS CLAVIER
             if(_pConsole->isKeyboardPressed())
@@ -117,7 +121,11 @@ int Partie::TourJoueur(int mode, Console* _pConsole, Damier* _pDamier, FenetreAl
                             arbre_affiche = true;
                             rafraichir_ecran = true;
                             system("cls");
-                            _pDamier->AfficherArbreRecherche(_pConsole, ligneCurseurDamier, colonneCurseurDamier);
+
+                            arbre_recherche.clear(); /// TEMP : pour le mode profondeur 0 pour le moment
+                            arbre_recherche.push_back(new Etat(_pDamier, ligneCurseurDamier, colonneCurseurDamier, _couleur_tour));
+                            arbre_recherche[0]->AfficherArbreRecherche(_pConsole);
+//                            _pDamier->AfficherArbreRecherche(_pConsole, ligneCurseurDamier, colonneCurseurDamier);
                         }
                         // Si on bouge le curseur sur une case voisine alors qu'on était sur un coup jouable, on enlève l'arbre
                         else if(_pDamier->getDamier()[ligneCurseurDamier][colonneCurseurDamier] != COUP_JOUABLE && arbre_affiche)

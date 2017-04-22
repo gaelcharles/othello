@@ -4,6 +4,7 @@
 #include "Evenements.h"
 #include "IA.h"
 #include "FenetreAllegro.h"
+#include "Arbre.h"
 
 #include <iostream>
 #include <allegro.h>
@@ -28,6 +29,23 @@ int main()
     bool verif = false;
 
     pConsole = Console::getInstance();
+
+    /// TEMP
+//    Etat* pEtat = new Etat(pDamier, 2, 3, NOIR);
+//
+//    pConsole->gotoLigCol(0, 35);
+//    std::cout << "Simulation - Tour : " << pEtat->getTour() << " - Score : " << pEtat->getScore(NOIR) << "/" << pEtat->getScore(BLANC) << std::endl;
+//    for(unsigned int i(0) ; i<pEtat->getSituationDamier()->getTaille() ; i++)
+//    {
+//        for(unsigned int j(0) ; j<pEtat->getSituationDamier()->getTaille()
+//         ; j++)
+//        {
+//            std::cout << pEtat->getSituationDamier()->getDamier()[i][j];
+//        }
+//        std::cout << std::endl;
+//    }
+//
+//    system("pause");
 
     mode = GfxMenu::Afficher(pDamier, pConsole, pOrdinateur, couleur_tour); //affiche le menu
 
