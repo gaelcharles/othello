@@ -38,6 +38,8 @@
 		</Linker>
 		<Unit filename="Affichage.cpp" />
 		<Unit filename="Affichage.h" />
+		<Unit filename="Arbre.cpp" />
+		<Unit filename="Arbre.h" />
 		<Unit filename="Console.cpp" />
 		<Unit filename="Console.h" />
 		<Unit filename="Constantes.h" />
