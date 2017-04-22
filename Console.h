@@ -51,8 +51,6 @@ class Console
 
         void setColor(e_color texte, e_color fond);
         void espacer(int espacement);
-//        void
-
 };
 
 #endif // CONSOLE_H_INCLUDED

@@ -108,6 +108,26 @@ int Partie::TourJoueur(int mode, Console* _pConsole, Damier* _pDamier, FenetreAl
                                       origineCurseurLigne, origineCurseurColonne, ligneCurseurAffichageMax, colonneCurseurAffichageMax,
                                       ligneCurseurDamierMax, colonneCurseurDamierMax);
 
+                    // Si lors d'une partie contre l'IA aléatoire
+                    if(mode == 1)
+                    {
+                        // Si le curseur est placé sur un coup jouable, on affiche l'arbre
+                        if(_pDamier->getDamier()[ligneCurseurDamier][colonneCurseurDamier] == COUP_JOUABLE)
+                        {
+                            arbre_affiche = true;
+                            rafraichir_ecran = true;
+                            system("cls");
+                            _pDamier->AfficherArbreRecherche(_pConsole, ligneCurseurDamier, colonneCurseurDamier);
+                        }
+                        // Si on bouge le curseur sur une case voisine alors qu'on était sur un coup jouable, on enlève l'arbre
+                        else if(_pDamier->getDamier()[ligneCurseurDamier][colonneCurseurDamier] != COUP_JOUABLE && arbre_affiche)
+                        {
+                            arbre_affiche = false;
+                            rafraichir_ecran = true;
+                            system("cls");
+                        }
+                    }
+
                     _pConsole->gotoLigCol(ligneCurseurAffichage, colonneCurseurAffichage);
                 }
 
@@ -141,26 +161,6 @@ int Partie::TourJoueur(int mode, Console* _pConsole, Damier* _pDamier, FenetreAl
                 if((touche == 'g' || touche == 'G'))
                 {
                     _pAllegro->OuvertureModeGraphique(1280, 720);
-                }
-            }
-            // Si lors d'une partie contre l'IA aléatoire
-            if(mode == 1)
-            {
-                // Si le curseur est placé sur un coup jouable, on affiche l'arbre
-                if(_pDamier->getDamier()[ligneCurseurDamier][colonneCurseurDamier] == COUP_JOUABLE && !arbre_affiche)
-                {
-                    arbre_affiche = true;
-                    rafraichir_ecran = true;
-                    _pConsole->gotoLigCol(10, 40);
-                    std::cout << "Case jouable";
-                }
-                // Si on bouge le curseur sur une case voisine alors qu'on était sur un coup jouable, on enlève l'arbre
-                else if(_pDamier->getDamier()[ligneCurseurDamier][colonneCurseurDamier] != COUP_JOUABLE && arbre_affiche)
-                {
-                    arbre_affiche = false;
-                    rafraichir_ecran = true;
-                    _pConsole->gotoLigCol(10, 40);
-                    _pConsole->espacer(12);
                 }
             }
         }

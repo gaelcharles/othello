@@ -3,12 +3,14 @@
 #include "Console.h"
 
 #include <vector>
+#include <string>
 
 class Damier
 {
     public:
 
         Damier(int _taille, int _ligneAffichage, int _colonneAffichage);
+        Damier(Damier* _pCopie);
         ~Damier();
 
         //Getters
@@ -16,6 +18,7 @@ class Damier
         int getLigneAffichage() const { return m_ligneAffichage; }
         int getColonneAffichage() const { return m_colonneAffichage; }
         std::vector< std::vector<char> > getDamier() { return m_damier; }
+        std::string getNomCase(int _ligne, int _colonne);
 
         //Methodes de la classe
         void Afficher(Console* _pConsole); //affiche le damier à partir du coin superieur gauche (point d'affichage)
@@ -25,6 +28,8 @@ class Damier
         void ReinitialiserPossibilites(); //retourne le nombre de pions de la couleur du joueur en parametre
         int CompterPions(char _couleur); //retourne le nombre de pions de la couleur en parametre
         int Chargement(char& _couleur_tour); //charge une partie sauvegardée
+        Damier* SimulerCoup(int _ligne, int _colonne, char _couleur);
+        void AfficherArbreRecherche(Console* _pConsole, int _ligne, int _colonne);
 
     private:
         int m_taille; //nombre de lignes et de colonnes du damier
