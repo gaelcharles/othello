@@ -20,6 +20,7 @@ class Damier
         //Methodes de la classe
         void Afficher(Console* _pConsole); //affiche le damier à partir du coin superieur gauche (point d'affichage)
         void CoupsPossibles(int _ligne, int _colonne, char _couleur_tour); //cherche tous les coups possibles pour un joueur
+        std::vector< std::vector<int> > CasesJouables(); //retourne une liste de tous les coups jouables
         void ChangerCouleurPions(int _ligne, int _colonne, char _couleur_tour); //retourne les pions selon le pion joue aux coordonnees en parametres
         void ReinitialiserPossibilites(); //retourne le nombre de pions de la couleur du joueur en parametre
         int CompterPions(char _couleur); //retourne le nombre de pions de la couleur en parametre

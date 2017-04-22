@@ -15,7 +15,6 @@ class IA
         ~IA();
 
         //Methodes
-        std::vector< std::vector<int> > CasesJouables(Damier* _pDamier);
         bool TourOrdinateur(Console* _pConsole, Damier* _pDamier, char _couleur_tour);
 
         //G & S

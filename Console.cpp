@@ -61,3 +61,11 @@ void Console::setColor(e_color texte, e_color fond)
     SetConsoleTextAttribute(H,fond*16+texte);
 }
 
+void Console::espacer(int espacement)
+{
+    if(espacement >= 0 && espacement < 80)
+    {
+        for(int i(0) ; i<espacement ; i++)
+            std::cout << ' ';
+    }
+}

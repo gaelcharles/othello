@@ -70,6 +70,38 @@ void Damier::CoupsPossibles(int _ligne, int _colonne, char _couleur_tour)
     }
 }
 
+std::vector< std::vector<int> > Damier::CasesJouables()
+/**********************************************************************************************
+ * \brief CasesJouables : retourne la liste des coordonnees de toutes les cases jouables      *
+ * \author Gaël + Tom                                                                         *
+ *                                                                                            *
+ * \return case_jouables : Liste des coordonnees de toutes les cases jouables                 *
+ *                                                                                            *
+ **********************************************************************************************/
+{
+    // Ensemble des coordonnées donnant un coup jouable
+    std::vector<std::vector<int> > cases_jouables;
+
+    // Vecteur tampon regroupant les coordonnées d'un coup jouable donné
+    std::vector<int> tampon;
+
+    for(int i(0) ; i<m_taille ; i++)
+    {
+        for(int j(0) ; j<m_taille ; j++)
+        {
+            if(m_damier[i][j] == COUP_JOUABLE) // Si un coup est jouable sur cette case
+            {
+                tampon.push_back(i);
+                tampon.push_back(j);
+                cases_jouables.push_back(tampon);
+                tampon.clear();
+            }
+        }
+    }
+
+    return cases_jouables; //retourne la liste des coordonnees de toutes les cases jouables
+}
+
 void Damier::Afficher(Console* _pConsole)
 {
     GfxDamier::Afficher(_pConsole, this);
