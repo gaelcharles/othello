@@ -169,31 +169,36 @@ int Damier::CompterPions(char _couleur)
     return n;
 }
 
-int Damier::Chargement()
+int Damier::Chargement(char& _couleur_tour)
 {
     std::ifstream fichier ("partie.txt", std::ios::in);
 
-
+    // Si l'ouverture du fichier a réussi
     if(fichier)
     {
-        int choix, taille;
-        fichier >> choix >> taille;
+        int mode = 0, taille = 0;
+        char pion = 0;
 
-        char pion;
+        // Lecture : D'abord de mode de jeu, puis le joueur, puis la taille du plateau
+        fichier >> mode >> _couleur_tour >> taille;
 
+        // Pour chaque case dans le fichier
         for(int i=0; i<taille; i++)
         {
             for(int j=0; j<taille; j++)
             {
+                // Lecture du caractère+ associé et enregistrement
                 fichier >> pion;
-                if(pion!='0')
+                if(pion == NOIR || pion == BLANC)
                     m_damier[i][j]=pion;
                 else
-                    m_damier[i][j]=' ' ;
+                    m_damier[i][j]=' ';
+
             }
         }
-        return choix;
+        return mode;
     }
+    // Erreur
     else
     {
         std::cerr << "Impossible d'ouvrir le fichier !" << std::endl;

@@ -23,6 +23,6 @@ namespace GfxFin
 
 namespace GfxMenu
 {
-    int Afficher(Damier* damier, Console* _pConsole, IA* _bot);
-    int Echap(Console* _pConsole, int mode, Damier* d);
+    int Afficher(Damier* damier, Console* _pConsole, IA* _bot, char& _couleur_tour);
+    int Echap(Console* _pConsole, int mode, Damier* d, char _couleur_tour);
 }

@@ -85,7 +85,6 @@ int Partie::TourJoueur(int mode, Console* _pConsole, Damier* _pDamier, FenetreAl
     bool continuer_tour=true;
     int quitter = 0;
     char touche = 0;
-    bool pression_touche = false;
 
     GfxDamier::Afficher(_pConsole, _pDamier);
 
@@ -119,10 +118,10 @@ int Partie::TourJoueur(int mode, Console* _pConsole, Damier* _pDamier, FenetreAl
                     rafraichir_ecran = true;
                 }
 
-                if(touche == 27) //si appuie sur ECHAP
+                if(touche == 27) //si on appuie sur ECHAP
                 {
                     //ouvre le menu ECHAP
-                    quitter=GfxMenu::Echap(_pConsole, mode, _pDamier);
+                    quitter=GfxMenu::Echap(_pConsole, mode, _pDamier, _couleur_tour);
 
                     //si le joueur veut quitter
                     if(quitter)
@@ -221,7 +220,7 @@ bool Partie::CoupExistant(Damier* _pDamier)
     return coup_existant;
 }
 
-void Partie::Sauvegarde(Damier* _pDamier, int mode)
+void Partie::Sauvegarde(Damier* _pDamier, int mode, char _couleur_tour)
 {
 
     std::ofstream fichier("partie.txt", std::ios::out | std::ios::trunc);
@@ -230,7 +229,7 @@ void Partie::Sauvegarde(Damier* _pDamier, int mode)
     {
         _pDamier->ReinitialiserPossibilites();
 
-        fichier << mode << " " << _pDamier->getTaille() << std::endl;
+        fichier << mode << " " << _couleur_tour << " " << _pDamier->getTaille() << std::endl;
 
         for(int i=0; i<_pDamier->getTaille() ; i++)
         {

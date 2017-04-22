@@ -21,6 +21,8 @@
 #define NOIR 'N'
 #define COUP_JOUABLE '.'
 
+#define MENU_ASCII_ART "          ___  _   _          _ _\n         / _ \\| |_| |__   ___| | | ___\n        | | | | __|  _ \\ / _ \\ | |/ _ \\\n        | |_| | |_| | | |  __/ | | (_) |\n         \\___/ \\__|_| |_|\\___|_|_|\\___/"
+
 
 /// CONSTANTES ///
 

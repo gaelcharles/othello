@@ -24,14 +24,14 @@ int main()
     char couleur_tour = NOIR; //couleur des pions du joueur actuel
     const int origineCurseurLigne = 7, origineCurseurColonne = 8; //coordonnees d'origine pour l'affichage du pointeur
     int quitter = 0; //booleen de dectection de fin de partie
-    int choix; //choix de l'utilisateur pour le menu
+    int mode; //choix de l'utilisateur pour le menu
     bool verif = false;
 
     pConsole = Console::getInstance();
 
-    choix = GfxMenu::Afficher(pDamier, pConsole, pOrdinateur); //affiche le menu
+    mode = GfxMenu::Afficher(pDamier, pConsole, pOrdinateur, couleur_tour); //affiche le menu
 
-    if(choix == 3) //si l'utilisateur quitte le programme
+    if(mode == -1) //si l'utilisateur quitte le programme
         exit(0);
 
     // Passe la console en texte blanc sur fond vert
@@ -57,14 +57,14 @@ int main()
             pConsole->gotoLigCol(origineCurseurLigne, origineCurseurColonne);
 
             //Deroulement du tour
-            if(choix == 2) //mode deux joueurs
-                quitter = Partie::TourJoueur(choix, pConsole, pDamier, pAllegro, couleur_tour);
-            else if(choix == 1) //mode joueur contre ordinateur
+            if(mode == 0) //mode deux joueurs
+                quitter = Partie::TourJoueur(mode, pConsole, pDamier, pAllegro, couleur_tour);
+            else if(mode >= 1) //mode joueur contre ordinateur
             {
-                if(couleur_tour == BLANC) //tour de l'ordinateur
+                if(couleur_tour == BLANC) //tour de l'ordinateur (toujours blanc)
                     quitter = pOrdinateur->TourOrdinateur(pConsole, pDamier, couleur_tour);
                 else
-                    quitter = Partie::TourJoueur(choix, pConsole, pDamier, pAllegro, couleur_tour);
+                    quitter = Partie::TourJoueur(mode, pConsole, pDamier, pAllegro, couleur_tour);
             }
         }
         else

@@ -193,17 +193,28 @@ void GfxFin::AfficherFin(Damier* _pDamier)
     system("pause");
 }
 
-int GfxMenu::Afficher(Damier* _pDamier, Console* _pConsole, IA* _bot)
+int GfxMenu::Afficher(Damier* _pDamier, Console* _pConsole, IA* _bot, char& _couleur_tour)
+/**********************************************************************************************
+ * \brief Afficher : Affiche le menu principal et récupère le choix de l'utilisateur          *
+ * \author Gaël, Camille                                                                      *
+ *                                                                                            *
+ * \param _pDamier : Pointeur sur le damier créé                                              *
+ * \param _pConsole : Pointeur sur la console                                                 *
+ * \param _bot : Pointeur sur l'IA éventuelle                                                 *
+ * \param _couleur_tour : Référence sur la couleur du joueur qui commencera                   *
+ * \return mode : -1 pour quitter, 0 pour partie 2J, n pour partie 1J avec IA niveau n        *
+ *                                                                                            *
+ **********************************************************************************************/
 {
     // Variables
-    int choix = 0, difficulte = 0;
+    int choix = 0, mode = 0;
 
     // Passe la console en texte noir sur fond blanc
     _pConsole->setColor(COULEUR_NOIR, COULEUR_BLANC);
     system("cls");
 
     _pConsole->gotoLigCol(2, 0);
-    std::cout << "          ___  _   _          _ _\n         / _ \\| |_| |__   ___| | | ___\n        | | | | __|  _ \\ / _ \\ | |/ _ \\\n        | |_| | |_| | | |  __/ | | (_) |\n         \\___/ \\__|_| |_|\\___|_|_|\\___/";
+    std::cout << MENU_ASCII_ART;
     _pConsole->gotoLigCol(9, 11);
     std::cout << "0. Continuer la partie";
     _pConsole->gotoLigCol(10,11);
@@ -219,37 +230,47 @@ int GfxMenu::Afficher(Damier* _pDamier, Console* _pConsole, IA* _bot)
         std::cin >> choix;
     }while(choix!=0 && choix != 1 && choix != 2 && choix != 3);
 
-    if (choix == 0) //continuer partie sauvegardee
+    if(choix == 0) // Charger une partie
     {
-        choix = _pDamier->Chargement();
+        mode = _pDamier->Chargement(_couleur_tour);
+        if(mode >= 1) _bot->setDifficulte(mode);
     }
 
-    if(choix == 1) // IA
+    else if(choix == 1)
     {
         system("cls");
         _pConsole->gotoLigCol(2, 0);
-        std::cout << "          ___  _   _          _ _\n         / _ \\| |_| |__   ___| | | ___\n        | | | | __|  _ \\ / _ \\ | |/ _ \\\n        | |_| | |_| | | |  __/ | | (_) |\n         \\___/ \\__|_| |_|\\___|_|_|\\___/";
+        std::cout << MENU_ASCII_ART;
         _pConsole->gotoLigCol(9, 11);
         std::cout << "1. Facile";
         // 2. Moyen, 3. Difficile
         do
         {
             _pConsole->gotoLigCol(11, 11);
-            std::cin >> difficulte;
-        }while(difficulte != 1);
+            std::cin >> mode;
+        }while(mode != 1);
 
-        _bot->setDifficulte(difficulte);
+        _bot->setDifficulte(mode);
     }
 
-    return choix;
+    else if(choix == 2)
+        mode = 0;
+
+    else if(choix == 3)
+        mode = -1;
+
+    return mode;
 }
 
-int GfxMenu::Echap(Console* _pConsole, int mode, Damier* _pDamier)
+int GfxMenu::Echap(Console* _pConsole, int mode, Damier* _pDamier, char _couleur_tour)
 {
+    int choix = 0;
+
+    _pConsole->setColor(COULEUR_NOIR, COULEUR_BLANC);
     system("cls");
 
     _pConsole->gotoLigCol(2, 0);
-    std::cout << "          ___  _   _          _ _\n         / _ \\| |_| |__   ___| | | ___\n        | | | | __|  _ \\ / _ \\ | |/ _ \\\n        | |_| | |_| | | |  __/ | | (_) |\n         \\___/ \\__|_| |_|\\___|_|_|\\___/";
+    std::cout << MENU_ASCII_ART;
     _pConsole->gotoLigCol(9, 14);
     std::cout << "PAUSE" ;
     _pConsole->gotoLigCol(11,11);
@@ -259,17 +280,17 @@ int GfxMenu::Echap(Console* _pConsole, int mode, Damier* _pDamier)
     _pConsole->gotoLigCol(13, 11);
     std::cout << "3. Retour au jeu";
 
-    int choix;
-
     do
     {
         _pConsole->gotoLigCol(14, 11);
         std::cin >> choix;
     } while(choix != 1 && choix != 2 && choix != 3);
 
+    _pConsole->setColor(COULEUR_BLANC, COULEUR_VERT); // Par défaut
+
     if(choix == 1)
     {
-        Partie::Sauvegarde(_pDamier, mode);
+        Partie::Sauvegarde(_pDamier, mode, _couleur_tour);
         return 2;
     }
 
