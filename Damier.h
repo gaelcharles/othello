@@ -1,3 +1,8 @@
+/// \file Damier.h
+/// \brief Contient la classe Damier ainsi que les prototypes de ses méthodes
+/// \author Gaël, Camille, Tom
+/// \version Version finale
+
 #ifndef DAMIER_H
 #define DAMIER_H
 #include "Console.h"

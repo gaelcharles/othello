@@ -1,3 +1,8 @@
+/// \file Damier.cpp
+/// \brief Implémentation des méthodes de la classe Damier
+/// \author Gaël, Camille, Tom
+/// \version Version finale
+
 #include "Damier.h"
 #include "console.h"
 #include "Affichage.h"
@@ -9,6 +14,11 @@
 
 Damier::Damier(int _taille, int _ligneAffichage, int _colonneAffichage)
     :m_taille(_taille), m_ligneAffichage(_ligneAffichage), m_colonneAffichage(_colonneAffichage)
+/// \brief Constructeur surchargé de la classe Damier
+///
+/// \param _taille Taille du damier
+/// \param _ligneAffichage Ligne d'affichage du damier
+/// \param _colonneAffichage Colonne d'affichage du damier
 {
     //on crée un vecteur tampon
     std::vector<char> tmp;
@@ -29,6 +39,9 @@ Damier::Damier(int _taille, int _ligneAffichage, int _colonneAffichage)
 }
 
 Damier::Damier(Damier* _pCopie)
+/// \brief Constructeur par copie de la classe Damier
+///
+/// \param _pCopie Pointeur sur une instance de Damier
 {
     //Constructeur par copie
     m_taille = _pCopie->getTaille();
@@ -37,8 +50,10 @@ Damier::Damier(Damier* _pCopie)
     m_damier = _pCopie->getDamier();
 }
 
-
 Damier::~Damier()
+/// \brief Destructeur de la classe Damier
+///
+/// \param void
 {
     //destructeur
 }
@@ -52,12 +67,27 @@ std::string Damier::getNomCase(int _ligne, int _colonne)
 }
 
 void Damier::setCaseDamier(int _ligne, int _colonne, char _valeur)
+/// \brief Attribue à une case de coordonnées (_ligne, _colonne) la valeur en paramètre
+/// \author Tom
+///
+/// \param _ligne Ligne de la case sélectionnée
+/// \param _colonne Colonne de la case sélectionnée
+/// \param _valeur Nouvelle valeur de la case
+/// \return void
 {
     if(_valeur == ' ' || _valeur == COUP_JOUABLE || _valeur == NOIR || _valeur == BLANC) //cases possibles du damier
         m_damier[_ligne][_colonne] = _valeur; //change la valeur de la case aux coordonnees (_ligne, _colonne)
 }
 
 void Damier::CoupsPossibles(int _ligne, int _colonne, char _couleur_tour)
+/// \brief Attribue la valeur COUP_JOUABLE à chaque case possible,
+///        selon la couleur du joueur sur la case donnée en paramètre
+/// \author Gaël, Camille
+///
+/// \param _ligne Ligne de la case sélectionnée
+/// \param _colonne Colonne de la case sélectionnée
+/// \param _couleur_tour Couleur du joueur pendant ce tour
+/// \return void
 {
     // Reference des deplacements elementaires selon les directions : N,S,E,W,NE,NW,SE,SW
     const int directions[8][2] = {{-1,0}, {1,0}, {0,1}, {0,-1}, {-1,1}, {-1,-1}, {1,1}, {1,-1}};
@@ -95,13 +125,11 @@ void Damier::CoupsPossibles(int _ligne, int _colonne, char _couleur_tour)
 }
 
 std::vector< std::vector<int> > Damier::CasesJouables()
-/**********************************************************************************************
- * \brief CasesJouables : retourne la liste des coordonnees de toutes les cases jouables      *
- * \author Gaël + Tom                                                                         *
- *                                                                                            *
- * \return case_jouables : Liste des coordonnees de toutes les cases jouables                 *
- *                                                                                            *
- **********************************************************************************************/
+/// \brief Retourne la liste des coordonnées de toutes les cases jouables
+/// \author Gaël
+///
+/// \param void
+/// \return _cases_jouables Liste des coordonnées de toutes les cases jouables
 {
     // Ensemble des coordonnées donnant un coup jouable
     std::vector<std::vector<int> > cases_jouables;
@@ -127,12 +155,24 @@ std::vector< std::vector<int> > Damier::CasesJouables()
 }
 
 void Damier::Afficher(Console* _pConsole)
+/// \brief Affichage de la grille du damier et de son contenu
+/// \author Camille, Tom
+///
+/// \param _pConsole Pointeur sur une instance de Console
+/// \return void
 {
     GfxDamier::Afficher(_pConsole, this);
     GfxDamier::AfficherContenu(_pConsole, this);
 }
 
 void Damier::ChangerCouleurPions(int _ligne, int _colonne, char _couleur_tour)
+/// \brief Change la couleur des pions sur le plateau en fonction de la couleur du pion joué
+/// \author Gaël, Camille
+///
+/// \param _ligne Ligne de la case jouée
+/// \param _colonne Colonne de la case jouée
+/// \param _couleur_tour Couleur du joueur pendant ce tour
+/// \return void
 {
     // Référence des déplacements élémentaires selon les directions : N,S,E,W,NE,NW,SE,SW
     const int directions[8][2] = {{-1,0}, {1,0}, {0,1}, {0,-1}, {-1,1}, {-1,-1}, {1,1}, {1,-1}};
@@ -194,6 +234,11 @@ void Damier::ChangerCouleurPions(int _ligne, int _colonne, char _couleur_tour)
 }
 
 void Damier::ReinitialiserPossibilites()
+/// \brief Change la valeur des cases de type COUP_JOUABLE en cases vides
+/// \author Camille
+///
+/// \param void
+/// \return void
 {
     for(int i=0;i<m_taille;i++)
     {
@@ -208,6 +253,11 @@ void Damier::ReinitialiserPossibilites()
 }
 
 int Damier::CompterPions(char _couleur)
+/// \brief Compte et retourne le nombre de pions de la couleur en paramètre
+/// \author Camille
+///
+/// \param _couleur Couleur des pions
+/// \return n Nombre de pions de la couleur en paramètre
 {
     int n=0;
 
@@ -226,6 +276,11 @@ int Damier::CompterPions(char _couleur)
 }
 
 int Damier::Chargement(char& _couleur_tour)
+/// \brief Charge les informations du fichier 'partie.txt' dans des variables du programme
+/// \author Camille
+///
+/// \param _couleur_tour Couleur des pions du joueur pendant ce tour
+/// \return mode Valeur correspondant au mode de jeu lue dans le fichier 'partie.txt'
 {
     std::ifstream fichier ("partie.txt", std::ios::in);
 
@@ -258,13 +313,20 @@ int Damier::Chargement(char& _couleur_tour)
     else
     {
         std::cerr << "Impossible d'ouvrir le fichier !" << std::endl;
-        return 3;
+        return -1;
     }
 
 
 }
 
 void Damier::AfficherPetitDamier(Console* _pConsole, const int _ligne_orig, const int _colonne_orig)
+/// \brief Affiche un damier de taille réduite aux coordonnées en paramètre
+/// \author Gaël
+///
+/// \param _pConsole Pointeur sur une instance de Console
+/// \param _ligne_orig Ligne d'affichage originelle
+/// \param _colonne_orig Colonne d'affichage doriginelle
+/// \return void
 {
     _pConsole->gotoLigCol(_ligne_orig, _colonne_orig);
 
