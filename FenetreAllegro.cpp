@@ -3,7 +3,7 @@
 
 // Constructeur
 FenetreAllegro::FenetreAllegro() :
-    m_allegro_active(false), m_buffer(NULL)
+    m_allegro_active(false), m_buffer(NULL), m_plateau(NULL)
 {
     m_curseur.X = 0;
     m_curseur.Y = 0;
