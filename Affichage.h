@@ -1,7 +1,9 @@
 #include "Console.h"
 #include "Damier.h"
 #include "IA.h"
+#include "Arbre.h"
 
+#include <vector>
 #include <iostream>
 
 namespace GfxDamier
@@ -14,10 +16,7 @@ namespace GfxInfos
 {
     void AfficherTour(Console* _pConsole, char tour);
     void AfficherScore(Console* _pConsole, Damier* _pDamier);
-}
-
-namespace GfxFin
-{
+    void AfficherArbreRecherche(Console* _pConsole, std::vector<Etat*> _arbre_recherches);
     void AfficherFin(Damier* _pDamier);
 }
 

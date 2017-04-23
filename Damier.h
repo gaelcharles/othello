@@ -30,8 +30,7 @@ class Damier
         void ReinitialiserPossibilites(); //reinitialise le type des cases de type COUP_JOUABLE
         int CompterPions(char _couleur); //retourne le nombre de pions de la couleur en parametre
         int Chargement(char& _couleur_tour); //charge une partie sauvegardée
-        Damier* SimulerCoup(int _ligne, int _colonne, char _couleur);
-        void AfficherArbreRecherche(Console* _pConsole, int _ligne, int _colonne);
+        void AfficherPetitDamier(Console* _pConsole, const int _ligne_orig, const int _colonne_orig); // Affiche le petit damier simulé
 
     private:
         int m_taille; //nombre de lignes et de colonnes du damier

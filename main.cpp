@@ -30,23 +30,6 @@ int main()
 
     pConsole = Console::getInstance();
 
-    /// TEMP
-//    Etat* pEtat = new Etat(pDamier, 2, 3, NOIR);
-//
-//    pConsole->gotoLigCol(0, 35);
-//    std::cout << "Simulation - Tour : " << pEtat->getTour() << " - Score : " << pEtat->getScore(NOIR) << "/" << pEtat->getScore(BLANC) << std::endl;
-//    for(unsigned int i(0) ; i<pEtat->getSituationDamier()->getTaille() ; i++)
-//    {
-//        for(unsigned int j(0) ; j<pEtat->getSituationDamier()->getTaille()
-//         ; j++)
-//        {
-//            std::cout << pEtat->getSituationDamier()->getDamier()[i][j];
-//        }
-//        std::cout << std::endl;
-//    }
-//
-//    system("pause");
-
     mode = GfxMenu::Afficher(pDamier, pConsole, pOrdinateur, couleur_tour); //affiche le menu
 
     if(mode == -1) //si l'utilisateur quitte le programme
@@ -105,7 +88,7 @@ int main()
 
     // Fin de partie
     if(quitter == 1) //si la partie se termine parce que l'un des deux a gagne, on affiche le score
-        GfxFin::AfficherFin(pDamier);
+        GfxInfos::AfficherFin(pDamier);
 
     // Fin de programme
     Console::deleteInstance();

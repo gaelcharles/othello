@@ -27,35 +27,6 @@ void IA::setDifficulte(int _difficulte)
     m_difficulte = _difficulte;
 }
 
-std::vector< std::vector<int> > IA::CasesJouables(Damier* _pDamier)
-/**********************************************************************************************
- * \brief CasesJouables : retourne la liste des coordonnees de toutes les cases jouables      *
- * \author Gaël + Tom                                                                         *
- *                                                                                            *
- * \param _pDamier : pointeur sur le damier                                                   *
- * \return Liste des coordonnees de toutes les cases jouables                                 *
- *                                                                                            *
- **********************************************************************************************/
-{
-    std::vector<std::vector<int> > cases_jouables; //ensemble des coordonnees donnant un coup jouable
-    std::vector<int> tampon; //vecteur tampon regroupant les coordonnees d'un coup jouable donne
-
-    for(int i(0) ; i<_pDamier->getTaille() ; i++)
-    {
-        for(int j(0) ; j<_pDamier->getTaille() ; j++)
-        {
-            if(_pDamier->getDamier()[i][j] == COUP_JOUABLE) // Si un coup est jouable sur cette case
-            {
-                tampon.push_back(i);
-                tampon.push_back(j);
-                cases_jouables.push_back(tampon);
-                tampon.clear();
-            }
-        }
-    }
-    return cases_jouables; //retourne la liste des coordonnees de toutes les cases jouables
-}
-
 int IA::Min(Damier* _pEtat, int _profondeur)
 {
     if(_profondeur == 0)
