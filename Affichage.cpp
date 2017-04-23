@@ -185,11 +185,12 @@ void GfxFin::AfficherFin(Damier* _pDamier)
     std::cout << "Partie terminee " << std::endl;
 
     if(n > b)
-        std::cout << "Les pions noirs gagnent !" << std::endl;
+        std::cout << "Les pions noirs gagnent ! ";
     else if(n < b)
-        std::cout << "Les pions blancs gagnent !" << std::endl;
+        std::cout << "Les pions blancs gagnent ! ";
     else
-        std::cout << "Match nul !" << std::endl;
+        std::cout << "Match nul ! ";
+    std::cout << "Score : " << std::endl << "Noirs " << n << " - " << b << " Blancs" << std::endl;
     system("pause");
 }
 

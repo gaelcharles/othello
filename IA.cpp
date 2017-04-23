@@ -30,7 +30,7 @@ void IA::setDifficulte(int _difficulte)
 std::vector< std::vector<int> > IA::CasesJouables(Damier* _pDamier)
 /**********************************************************************************************
  * \brief CasesJouables : retourne la liste des coordonnees de toutes les cases jouables      *
- * \author Gaël + Tom                                                                         *
+ * \author GaÃ«l + Tom                                                                         *
  *                                                                                            *
  * \param _pDamier : pointeur sur le damier                                                   *
  * \return Liste des coordonnees de toutes les cases jouables                                 *
@@ -92,7 +92,7 @@ int IA::Min(Damier* _pEtat, int _profondeur)
 
                 score = Max(pCopie, _profondeur-1);
 
-                //Définit le meilleur score minimal ou un score deja egal au meilleur score
+                //DÃ©finit le meilleur score minimal ou un score deja egal au meilleur score
                 if(score < meilleur_score || (score==meilleur_score && rand()%2 == 0)) //si le score est plus petit que le meilleur score minimal
                 {
                     meilleur_score = score; //alors on met a jour le meilleur score
@@ -147,7 +147,7 @@ int IA::Max(Damier* _pEtat, int _profondeur)
 
                 score = Min(pCopie, _profondeur-1);
 
-                //Définit le meilleur score maximal ou un score deja egal au meilleur score
+                //DÃ©finit le meilleur score maximal ou un score deja egal au meilleur score
                 if(score > meilleur_score || (score==meilleur_score && rand()%2 == 0)) //si le score est plus grand que le meilleur score maximal
                     meilleur_score = score; //alors on met a jour le meilleur score
 
@@ -183,11 +183,11 @@ bool IA::TourOrdinateur(Console* _pConsole, Damier* _pDamier, char _couleur_tour
     if(m_difficulte == 1) // IA NIVEAU 1 : JOUE AU HASARD
     {
         //vecteur contenant l'ensemble de chaque case jouable
-        std::vector< std::vector<int> > cases_jouables = CasesJouables(_pDamier);
+        std::vector< std::vector<int> > cases_jouables = _pDamier->CasesJouables();
 
         case_choisie = cases_jouables[rand() % (cases_jouables.size()) ]; //choisit une case aleatoire parmi celles de la liste
         _pDamier->ChangerCouleurPions(case_choisie[0], case_choisie[1], _couleur_tour); //retourne les pions selon le pion joue aux coordonnees en parametres
-        _pDamier->ReinitialiserPossibilites(); //retourne le nombre de pions de la couleur du joueur en parametre
+        _pDamier->ReinitialiserPossibilites();
     }
     else if(m_difficulte == 2) // IA NIVEAU 2 : ALGO MINIMAX
     {
@@ -221,7 +221,7 @@ bool IA::TourOrdinateur(Console* _pConsole, Damier* _pDamier, char _couleur_tour
 
                     score = Min(pCopie, profondeur);
 
-                    //Définit le meilleur score maximal ou un score deja egal au meilleur score
+                    //DÃ©finit le meilleur score maximal ou un score deja egal au meilleur score
                     if(score > meilleur_score || (score==meilleur_score && rand()%2 == 0)) //si le score est plus grand que le meilleur score maximal
                     {
                         meilleur_score = score; //alors on met a jour le meilleur score
@@ -243,7 +243,7 @@ bool IA::TourOrdinateur(Console* _pConsole, Damier* _pDamier, char _couleur_tour
 
     }
 
-    // Le pion clignote juste avant d'être joué par l'IA
+    // Le pion clignote juste avant d'Ãªtre jouÃ© par l'IA
     for(int i(0) ; i<4 ; i++)
     {
         _pConsole->gotoLigCol(2*case_choisie[0]+_pDamier->getLigneAffichage()+1, 4*case_choisie[1]+_pDamier->getColonneAffichage()+1);
@@ -256,7 +256,7 @@ bool IA::TourOrdinateur(Console* _pConsole, Damier* _pDamier, char _couleur_tour
     //Animation : efface la reflexion de l'ordinateur
     _pConsole->gotoLigCol(12, 45);
     _pConsole->setColor(COULEUR_BLANC, COULEUR_VERT);
-    std::cout << "                 ";
+    _pConsole->espacer(17);
 
     //Affiche le coup joue
     _pConsole->gotoLigCol(_pDamier->getLigneAffichage()-3, _pDamier->getColonneAffichage()+2);

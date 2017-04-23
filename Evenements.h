@@ -6,7 +6,9 @@
 #include "Console.h"
 #include "Affichage.h"
 #include "FenetreAllegro.h"
+#include "Arbre.h"
 
+#include <vector>
 #include <iostream>
 #include <allegro.h>
 #include <winalleg.h>

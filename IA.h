@@ -8,14 +8,13 @@
 class IA
 {
     private :
-        int m_difficulte; // 1: facile (aléatoire)
+        int m_difficulte; // 1: facile (alÃ©atoire)
     public :
         // C & D
         IA();
         ~IA();
 
         //Methodes
-        std::vector< std::vector<int> > CasesJouables(Damier* _pDamier); //retourne la liste des coordonnees des cases jouables
         int Min(Damier* _pEtat, int _profondeur);
         int Max(Damier* _pEtat, int _profondeur);
         bool TourOrdinateur(Console* _pConsole, Damier* _pDamier, char _couleur_tour); //deroulement du tour de l'ordinateur

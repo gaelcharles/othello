@@ -45,9 +45,12 @@ class Console
         // Méthodes publiques
         void gotoLigCol(int lig, int col);
         void gotoDamierXY(int x, int y);
+
         bool isKeyboardPressed();
         int getInputKey();
+
         void setColor(e_color texte, e_color fond);
+        void espacer(int espacement);
 };
 
 #endif // CONSOLE_H_INCLUDED
