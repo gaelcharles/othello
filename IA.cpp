@@ -132,7 +132,7 @@ int IA::Max(Damier* _pEtat, int _profondeur)
     return meilleur_score;
 }
 
-bool IA::TourOrdinateur(Console* _pConsole, Damier* _pDamier, char _couleur_tour)
+bool IA::TourOrdinateur(Console* _pConsole, Damier* _pDamier, FenetreAllegro* _pAllegro, char _couleur_tour)
 {
     std::vector<int> case_choisie; //case choisie par l'ordinateur
 
@@ -143,6 +143,9 @@ bool IA::TourOrdinateur(Console* _pConsole, Damier* _pDamier, char _couleur_tour
     GfxDamier::AfficherContenu(_pConsole, _pDamier);
 
     //Animation : reflexion de l'ordinateur
+    if(_pAllegro->IsAllegroActive())
+        textprintf_ex(_pAllegro->buffer(), font, 700, 200, 0x000000, -1, "L'IA reflechit...");
+
     _pConsole->gotoLigCol(12, 45);
     std::cout << "L'IA reflechit";
     for(int i(0) ; i<3 ; i++)
@@ -215,6 +218,24 @@ bool IA::TourOrdinateur(Console* _pConsole, Damier* _pDamier, char _couleur_tour
     }
 
     // Le pion clignote juste avant d'être joué par l'IA
+    if(_pAllegro->IsAllegroActive())
+    {
+        for(int i(0) ; i<4 ; i++)
+        {
+            if(i%2 == 0)
+            {
+                circlefill(_pAllegro->buffer(), ALLEG_MARGE+case_choisie[1]*ALLEG_TCASE+ALLEG_TCASE/2, ALLEG_MARGE+case_choisie[0]*ALLEG_TCASE+ALLEG_TCASE/2, 20, 0xFFFFFF);
+                circle(_pAllegro->buffer(), ALLEG_MARGE+case_choisie[1]*ALLEG_TCASE+ALLEG_TCASE/2, ALLEG_MARGE+case_choisie[0]*ALLEG_TCASE+ALLEG_TCASE/2, 20, 0x000000);
+            }
+            else
+            {
+                rectfill(_pAllegro->buffer(), ALLEG_MARGE+case_choisie[1]*ALLEG_TCASE+1, ALLEG_MARGE+case_choisie[0]*ALLEG_TCASE+1, ALLEG_MARGE+case_choisie[1]*ALLEG_TCASE+ALLEG_TCASE-1, ALLEG_MARGE+case_choisie[0]*ALLEG_TCASE+ALLEG_TCASE-1, ALLEG_COULEUR_VERT);
+            }
+            blit(_pAllegro->buffer(), screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);
+            rest(250);
+        }
+    }
+
     for(int i(0) ; i<4 ; i++)
     {
         _pConsole->gotoLigCol(2*case_choisie[0]+_pDamier->getLigneAffichage()+1, 4*case_choisie[1]+_pDamier->getColonneAffichage()+1);

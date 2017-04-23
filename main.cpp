@@ -63,7 +63,7 @@ int main()
             else if(mode >= 1) //mode joueur contre ordinateur
             {
                 if(couleur_tour == BLANC) //tour de l'ordinateur (toujours blanc)
-                    quitter = pOrdinateur->TourOrdinateur(pConsole, pDamier, couleur_tour);
+                    quitter = pOrdinateur->TourOrdinateur(pConsole, pDamier, pAllegro, couleur_tour);
                 else
                     quitter = Partie::TourJoueur(mode, pConsole, pDamier, pAllegro, couleur_tour);
             }

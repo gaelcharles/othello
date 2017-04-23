@@ -267,11 +267,13 @@ void Damier::AfficherPetitDamier(Console* _pConsole, const int _ligne_orig, cons
 {
     _pConsole->gotoLigCol(_ligne_orig, _colonne_orig);
 
+    // Affichage bordure supérieure
     std::cout << BORDURE_ANGLE_HG;
     for(int i(0) ; i<TAILLE_PLATEAU*2 ; i++)
         std::cout << BORDURE_BARRE_HORZ;
     std::cout << BORDURE_ANGLE_HD;
 
+    // Affichage contenu
     for(int i(0) ; i<TAILLE_PLATEAU ; i++)
     {
         _pConsole->gotoLigCol(_ligne_orig+i+1, _colonne_orig);
@@ -304,6 +306,8 @@ void Damier::AfficherPetitDamier(Console* _pConsole, const int _ligne_orig, cons
         }
         std::cout << BORDURE_BARRE_VERT;
     }
+
+    // Affichage bordure inférieure
     _pConsole->gotoLigCol(_ligne_orig+TAILLE_PLATEAU, _colonne_orig);
     std::cout << BORDURE_ANGLE_BG;
     for(int i(0) ; i<TAILLE_PLATEAU*2 ; i++)

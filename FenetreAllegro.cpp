@@ -105,21 +105,21 @@ void FenetreAllegro::DeplacerCurseur(char direction)
 
 }
 
-void FenetreAllegro::AfficherCurseur(int marge)
+void FenetreAllegro::AfficherCurseur()
 {
-    rectfill(m_buffer, marge+m_curseur.X*ALLEG_TCASE+1, marge+m_curseur.Y*ALLEG_TCASE+1, marge+m_curseur.X*ALLEG_TCASE+ALLEG_TCASE-1, marge+m_curseur.Y*ALLEG_TCASE+ALLEG_TCASE-1, 0x00FF00);
+    rectfill(m_buffer, ALLEG_MARGE+m_curseur.X*ALLEG_TCASE+1, ALLEG_MARGE+m_curseur.Y*ALLEG_TCASE+1, ALLEG_MARGE+m_curseur.X*ALLEG_TCASE+ALLEG_TCASE-1, ALLEG_MARGE+m_curseur.Y*ALLEG_TCASE+ALLEG_TCASE-1, 0x00FF00);
 }
 
-void FenetreAllegro::AfficherDamier(Damier* pDamier, char tour, int marge)
+void FenetreAllegro::AfficherDamier(Damier* pDamier, char tour)
 {
     // Bordures
-    masked_blit(m_plateau, m_buffer, 0, 0, marge-50, marge-50, m_plateau->w, m_plateau->h);
+    masked_blit(m_plateau, m_buffer, 0, 0, ALLEG_MARGE-50, ALLEG_MARGE-50, m_plateau->w, m_plateau->h);
 
     // Lignes de plateau
     for(int ligne(0) ; ligne<=TAILLE_PLATEAU ; ligne++)
     {
-        line(m_buffer, marge+ligne*ALLEG_TCASE, marge, marge+ligne*ALLEG_TCASE, marge+ALLEG_TCASE*TAILLE_PLATEAU, 0xFFFFFF);
-        line(m_buffer, marge, marge+ligne*ALLEG_TCASE, marge+ALLEG_TCASE*TAILLE_PLATEAU, marge+ligne*ALLEG_TCASE, 0xFFFFFF);
+        line(m_buffer, ALLEG_MARGE+ligne*ALLEG_TCASE, ALLEG_MARGE, ALLEG_MARGE+ligne*ALLEG_TCASE, ALLEG_MARGE+ALLEG_TCASE*TAILLE_PLATEAU, 0xFFFFFF);
+        line(m_buffer, ALLEG_MARGE, ALLEG_MARGE+ligne*ALLEG_TCASE, ALLEG_MARGE+ALLEG_TCASE*TAILLE_PLATEAU, ALLEG_MARGE+ligne*ALLEG_TCASE, 0xFFFFFF);
     }
 
     for(int ligne(0) ; ligne<TAILLE_PLATEAU ; ligne++)
@@ -129,16 +129,16 @@ void FenetreAllegro::AfficherDamier(Damier* pDamier, char tour, int marge)
             switch(pDamier->getDamier()[ligne][colonne])
             {
             case NOIR:
-                circlefill(m_buffer, marge+colonne*ALLEG_TCASE+ALLEG_TCASE/2, marge+ligne*ALLEG_TCASE+ALLEG_TCASE/2, 20, 0x000000);
+                circlefill(m_buffer, ALLEG_MARGE+colonne*ALLEG_TCASE+ALLEG_TCASE/2, ALLEG_MARGE+ligne*ALLEG_TCASE+ALLEG_TCASE/2, 20, 0x000000);
                 break;
 
             case BLANC:
-                circlefill(m_buffer, marge+colonne*ALLEG_TCASE+ALLEG_TCASE/2, marge+ligne*ALLEG_TCASE+ALLEG_TCASE/2, 20, 0xFFFFFF);
-                circle(m_buffer, marge+colonne*ALLEG_TCASE+ALLEG_TCASE/2, marge+ligne*ALLEG_TCASE+ALLEG_TCASE/2, 20, 0x000000);
+                circlefill(m_buffer, ALLEG_MARGE+colonne*ALLEG_TCASE+ALLEG_TCASE/2, ALLEG_MARGE+ligne*ALLEG_TCASE+ALLEG_TCASE/2, 20, 0xFFFFFF);
+                circle(m_buffer, ALLEG_MARGE+colonne*ALLEG_TCASE+ALLEG_TCASE/2, ALLEG_MARGE+ligne*ALLEG_TCASE+ALLEG_TCASE/2, 20, 0x000000);
                 break;
 
             case COUP_JOUABLE:
-                circlefill(m_buffer, marge+colonne*ALLEG_TCASE+ALLEG_TCASE/2, marge+ligne*ALLEG_TCASE+ALLEG_TCASE/2, 5, 0xFF0000);
+                circlefill(m_buffer, ALLEG_MARGE+colonne*ALLEG_TCASE+ALLEG_TCASE/2, ALLEG_MARGE+ligne*ALLEG_TCASE+ALLEG_TCASE/2, 5, 0xFF0000);
                 break;
 
             default : {}
@@ -147,17 +147,17 @@ void FenetreAllegro::AfficherDamier(Damier* pDamier, char tour, int marge)
     }
 }
 
-void FenetreAllegro::AfficherInfos(Damier* pDamier, char tour, int marge)
+void FenetreAllegro::AfficherInfos(Damier* pDamier, char tour)
 {
-    textprintf_ex(m_buffer, font, marge-20, marge+TAILLE_PLATEAU*ALLEG_TCASE+90, 0x000000, -1, "Tour : ");
-    circlefill(m_buffer, marge+75, marge+TAILLE_PLATEAU*ALLEG_TCASE+90, 15, (tour == NOIR) ? 0x000000 : 0xFFFFFF);
-    circle(m_buffer, marge+75, marge+TAILLE_PLATEAU*ALLEG_TCASE+90, 15, 0x000000);
+    textprintf_ex(m_buffer, font, ALLEG_MARGE-20, ALLEG_MARGE+TAILLE_PLATEAU*ALLEG_TCASE+90, 0x000000, -1, "Tour : ");
+    circlefill(m_buffer, ALLEG_MARGE+75, ALLEG_MARGE+TAILLE_PLATEAU*ALLEG_TCASE+90, 15, (tour == NOIR) ? 0x000000 : 0xFFFFFF);
+    circle(m_buffer, ALLEG_MARGE+75, ALLEG_MARGE+TAILLE_PLATEAU*ALLEG_TCASE+90, 15, 0x000000);
 
-    textprintf_ex(m_buffer, font, marge-20, marge+TAILLE_PLATEAU*ALLEG_TCASE+120, 0xFFFFFF, 0x000000, "%d pions noirs",  pDamier->CompterPions(NOIR));
-    textprintf_ex(m_buffer, font, marge-20, marge+TAILLE_PLATEAU*ALLEG_TCASE+135, 0x000000, 0xFFFFFF, "%d pions blancs", pDamier->CompterPions(BLANC));
+    textprintf_ex(m_buffer, font, ALLEG_MARGE-20, ALLEG_MARGE+TAILLE_PLATEAU*ALLEG_TCASE+120, 0xFFFFFF, 0x000000, "%d pions noirs",  pDamier->CompterPions(NOIR));
+    textprintf_ex(m_buffer, font, ALLEG_MARGE-20, ALLEG_MARGE+TAILLE_PLATEAU*ALLEG_TCASE+135, 0x000000, 0xFFFFFF, "%d pions blancs", pDamier->CompterPions(BLANC));
 }
 
-void FenetreAllegro::AfficherFenetreGraphique(Damier* pDamier, char tour, int marge_plateau)
+void FenetreAllegro::AfficherFenetreGraphique(Damier* pDamier, char tour)
 {
     // Reset buffer
     clear_bitmap(m_buffer);
@@ -166,10 +166,10 @@ void FenetreAllegro::AfficherFenetreGraphique(Damier* pDamier, char tour, int ma
     clear_to_color(m_buffer, ALLEG_COULEUR_PALE);
 
     // Fond du plateau (sous le curseur)
-    rectfill(m_buffer, marge_plateau, marge_plateau, marge_plateau+TAILLE_PLATEAU*ALLEG_TCASE, marge_plateau+TAILLE_PLATEAU*ALLEG_TCASE, ALLEG_COULEUR_VERT);
+    rectfill(m_buffer, ALLEG_MARGE, ALLEG_MARGE, ALLEG_MARGE+TAILLE_PLATEAU*ALLEG_TCASE, ALLEG_MARGE+TAILLE_PLATEAU*ALLEG_TCASE, ALLEG_COULEUR_VERT);
 
     AfficherCurseur();
-    AfficherDamier(pDamier, tour, marge_plateau);
-    AfficherInfos(pDamier, tour, marge_plateau);
+    AfficherDamier(pDamier, tour);
+    AfficherInfos(pDamier, tour);
     blit(m_buffer, screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);
 }

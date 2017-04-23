@@ -29,10 +29,10 @@ class FenetreAllegro
         BITMAP* ChargerBitmap(const char* filename);
         void DeplacerCurseur(char direction);
 
-        void AfficherDamier(Damier* pDamier, char tour, int marge);
-        void AfficherCurseur(int marge = 70);
-        void AfficherInfos(Damier* pDamier, char tour, int marge);
-        void AfficherFenetreGraphique(Damier* pDamier, char tour, int marge_plateau = 70);
+        void AfficherDamier(Damier* pDamier, char tour);
+        void AfficherCurseur();
+        void AfficherInfos(Damier* pDamier, char tour);
+        void AfficherFenetreGraphique(Damier* pDamier, char tour);
 };
 
 

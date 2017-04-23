@@ -276,6 +276,7 @@ int GfxMenu::Afficher(Damier* _pDamier, Console* _pConsole, IA* _bot, char& _cou
 int GfxMenu::Echap(Console* _pConsole, int mode, Damier* _pDamier, char _couleur_tour)
 {
     int choix = 0;
+    int ret = 0;
 
     _pConsole->setColor(COULEUR_NOIR, COULEUR_BLANC);
     system("cls");
@@ -302,20 +303,20 @@ int GfxMenu::Echap(Console* _pConsole, int mode, Damier* _pDamier, char _couleur
     if(choix == 1)
     {
         Partie::Sauvegarde(_pDamier, mode, _couleur_tour);
-        return 2;
+        ret = 2;
     }
 
     if(choix == 2)
     {
-        return 2;
+        ret = 2;
     }
 
     if(choix == 3)
     {
         system("cls");
-        return 0;
+        ret = 0;
     }
 
-
+    return ret;
 }
 
