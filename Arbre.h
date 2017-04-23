@@ -17,13 +17,16 @@ class Transition
 {
     private :
         COORD m_pos; // Coordonnées de la case qui mène à cette transition
+        bool m_selectionne; // Booléen indiquant si le curseur sélectionne cette transition ou pas
     public :
         // C & D
         Transition(int _posx, int _posy);
         ~Transition();
 
-        // Getters
+        // Getters & Setters
         COORD getPos() const { return m_pos; }
+        bool estSelectionne() const { return m_selectionne; }
+        void selectionner(bool _selection) { m_selectionne = _selection; }
 };
 
 class Etat
@@ -46,13 +49,17 @@ class Etat
         ~Etat();
 
         // Getters
-        unsigned int getDegre() const { return m_degre; }
         Damier* getSituationDamier() const { return m_situation_damier; }
+        std::vector<Transition*> getAretes() const { return m_aretes; }
+        unsigned int getDegre() const { return m_degre; }
         char getTour() const { return m_couleur_tour; }
+
         int getScore(char _couleur) const { return m_situation_damier->CompterPions(_couleur); }
+        int getIndiceTransitionSelectionnee() const;
 
         // Méthodes
-        void AfficherArbreRecherche(Console* _pConsole);
+        void AfficherEtat(Console* _pConsole, int _decalage_colonne);
+        void DesafficherEtat(Console* _pConsole, int _decalage_colonne);
 };
 
 #endif // ARBRE_H_INCLUDED

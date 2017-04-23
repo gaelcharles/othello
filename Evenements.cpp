@@ -62,9 +62,7 @@ int Partie::TourJoueur(int mode, Console* _pConsole, Damier* _pDamier, FenetreAl
     int ligneCurseurAffichageMax, colonneCurseurAffichageMax;
     int ligneCurseurDamierMax, colonneCurseurDamierMax;
 
-    /// INITIALISATION DES VARIABLES
-
-    /// DEBUT VARIABLES CURSEUR
+    /// INITIALISATION DES VARIABLES DU CURSEUR DU DAMIER
     //coordonnées réelles de la case pointée par le curseur
     ligneCurseurDamier = 0;
     colonneCurseurDamier = 0;
@@ -81,13 +79,22 @@ int Partie::TourJoueur(int mode, Console* _pConsole, Damier* _pDamier, FenetreAl
     ligneCurseurAffichage = origineCurseurLigne;
     colonneCurseurAffichage = origineCurseurColonne;
 
+    /// VARIABLES POUR L'ARBRE DE RECHERCHES
+    std::vector<Etat*> arbre_recherche;
+
+    int curseur_indice_etat = 0,
+        curseur_indice_transition = 0;
+    int delta_y = 0;
+
+    int decalage_ligne = 0;
+    Etat* pEtatTemporaire = NULL;
+
+    /// VARIABLES DIVERSES
     bool rafraichir_ecran = true; //pour rentrer dès le début dans la boucle d'affichage
     bool continuer_tour=true;
     bool arbre_affiche = false; // L'arbre des possibilités doit-il être affiché ?
     int quitter = 0;
     char touche = 0;
-
-    std::vector<Etat*> arbre_recherche;
 
     // Affichage du damier
     GfxDamier::Afficher(_pConsole, _pDamier);
@@ -102,18 +109,21 @@ int Partie::TourJoueur(int mode, Console* _pConsole, Damier* _pDamier, FenetreAl
             // GESTIONS DES EVENEMENTS CLAVIER
             if(_pConsole->isKeyboardPressed())
             {
-                /// NOTE : faire un switch
                 //récupération de la touche sur laquelle l'utilisateur a appuyé
                 touche = _pConsole->getInputKey();
 
-                if(touche=='z' || touche=='s' || touche=='q' || touche=='d') //commandes de déplacement du curseur
+                switch(touche)
                 {
+                // Appui sur Z/Q/S/D : Déplacement du curseur de plateau
+                case 'Z': case 'Q': case 'S': case 'D':
+                case 'z': case 'q': case 's': case 'd':
+
                     Curseur::deplacer(touche, ligneCurseurDamier, colonneCurseurDamier, ligneCurseurAffichage, colonneCurseurAffichage,
                                       origineCurseurLigne, origineCurseurColonne, ligneCurseurAffichageMax, colonneCurseurAffichageMax,
                                       ligneCurseurDamierMax, colonneCurseurDamierMax);
 
-                    // Si lors d'une partie contre l'IA aléatoire
-                    if(mode == 1)
+                    // Si lors d'une partie contre l'IA
+                    if(mode >= 1)
                     {
                         // Si le curseur est placé sur un coup jouable, on affiche l'arbre
                         if(_pDamier->getDamier()[ligneCurseurDamier][colonneCurseurDamier] == COUP_JOUABLE)
@@ -122,33 +132,48 @@ int Partie::TourJoueur(int mode, Console* _pConsole, Damier* _pDamier, FenetreAl
                             rafraichir_ecran = true;
                             system("cls");
 
-                            arbre_recherche.clear(); /// TEMP : pour le mode profondeur 0 pour le moment
+                            curseur_indice_etat = 0;
+                            curseur_indice_transition = 0;
+
+                            // Reset de l'arbre affiché à chaque fois qu'on place le curseur sur un coup jouable
+                            arbre_recherche.clear();
+
+                            // Création de la racine de l'arbre à partir de ce nouvel état
                             arbre_recherche.push_back(new Etat(_pDamier, ligneCurseurDamier, colonneCurseurDamier, _couleur_tour));
-                            arbre_recherche[0]->AfficherArbreRecherche(_pConsole);
-//                            _pDamier->AfficherArbreRecherche(_pConsole, ligneCurseurDamier, colonneCurseurDamier);
+
+                            // Sélection de la première arête de la racine
+                            if(!arbre_recherche[0]->getAretes().empty())
+                                arbre_recherche[0]->getAretes()[0]->selectionner(true); // On sélectionne la première arête (indice 0)
+
+                            // Affichage de l'arbre
+                            GfxInfos::AfficherArbreRecherche(_pConsole, arbre_recherche);
                         }
                         // Si on bouge le curseur sur une case voisine alors qu'on était sur un coup jouable, on enlève l'arbre
                         else if(_pDamier->getDamier()[ligneCurseurDamier][colonneCurseurDamier] != COUP_JOUABLE && arbre_affiche)
                         {
                             arbre_affiche = false;
                             rafraichir_ecran = true;
+                            arbre_recherche.clear(); // Appelle également le destructeur de chaque état
                             system("cls");
                         }
                     }
 
                     _pConsole->gotoLigCol(ligneCurseurAffichage, colonneCurseurAffichage);
-                }
+                    break;
 
-                if(touche==13 && _pDamier->getDamier()[ligneCurseurDamier][colonneCurseurDamier]==COUP_JOUABLE)
-                {
-                    _pDamier->ChangerCouleurPions(ligneCurseurDamier, colonneCurseurDamier, _couleur_tour);
-                    continuer_tour=false;
-                    _pDamier->ReinitialiserPossibilites();
-                    rafraichir_ecran = true;
-                }
+                // Appui sur entrée : on veut jouer un coup
+                case 13:
+                    if(_pDamier->getDamier()[ligneCurseurDamier][colonneCurseurDamier]==COUP_JOUABLE)
+                    {
+                        _pDamier->ChangerCouleurPions(ligneCurseurDamier, colonneCurseurDamier, _couleur_tour);
+                        continuer_tour=false;
+                        _pDamier->ReinitialiserPossibilites();
+                        rafraichir_ecran = true;
+                    }
+                    break;
 
-                if(touche == 27) //si on appuie sur ECHAP
-                {
+                // Appui sur échap : menu pause
+                case 27:
                     //ouvre le menu ECHAP
                     quitter=GfxMenu::Echap(_pConsole, mode, _pDamier, _couleur_tour);
 
@@ -163,12 +188,106 @@ int Partie::TourJoueur(int mode, Console* _pConsole, Damier* _pDamier, FenetreAl
                         continuer_tour=true;
                         rafraichir_ecran=true;
                     }
-                }
+                    break;
 
-                // Ouverture du mode graphique
-                if((touche == 'g' || touche == 'G'))
-                {
+                // Appui sur les flèches directionnelles : déplacement du curseur de l'arbre de recherche
+                case FLECHE_HAUT: case FLECHE_BAS: case FLECHE_GAUCHE: case FLECHE_DROITE:
+                    // Si l'arbre est affiché
+                    if(!arbre_recherche.empty() && arbre_affiche)
+                    {
+                        // Flèche haut ou bas : déplacement du curseur parmi les transitions possibles
+                        if(touche == FLECHE_HAUT || touche == FLECHE_BAS)
+                        {
+                            switch(touche)
+                            {
+                            case FLECHE_HAUT: delta_y = -1; break;
+                            case FLECHE_BAS : delta_y =  1; break;
+                            }
+
+                            // On récupère l'indice de l'arête sélectionnée
+                            curseur_indice_transition = arbre_recherche[curseur_indice_etat]->getIndiceTransitionSelectionnee();
+
+                            if(curseur_indice_transition+delta_y >= 0 && (unsigned int)(curseur_indice_transition+delta_y) < arbre_recherche[curseur_indice_etat]->getAretes().size())
+                            {
+                                // On déselectionne cette arête
+                                arbre_recherche[curseur_indice_etat]->getAretes()[curseur_indice_transition]->selectionner(false);
+
+                                // On sélectionne l'arête adjacente
+                                arbre_recherche[curseur_indice_etat]->getAretes()[curseur_indice_transition+delta_y]->selectionner(true);
+
+                                // On incrémente
+                                curseur_indice_transition += delta_y;
+
+                                // On met à jour graphiquement
+                                arbre_recherche[curseur_indice_etat]->AfficherEtat(_pConsole, curseur_indice_etat);
+                            }
+                        }
+                        // Flèche droite : génération d'un nouvel état à partir de la transition actuellement sélectionnée
+                        else if(touche == FLECHE_DROITE && curseur_indice_etat+1 < 3 && mode == 2)
+                        {
+                            // On crée l'état généré par la transition sélectionnée (le noeud relié à l'arête sélectionnée)
+                            // On l'ajoute comme étant une feuille de l'arbre de recherche
+                            arbre_recherche.push_back(new Etat(arbre_recherche[curseur_indice_etat]->getSituationDamier(),
+                                                          (int)arbre_recherche[curseur_indice_etat]->getAretes()[curseur_indice_transition]->getPos().X,
+                                                          (int)arbre_recherche[curseur_indice_etat]->getAretes()[curseur_indice_transition]->getPos().Y,
+                                                               arbre_recherche[curseur_indice_etat]->getTour()));
+
+                            // On déplace le curseur sur ce nouvel état
+                            curseur_indice_etat++;
+                            curseur_indice_transition = 0;
+
+                            if(arbre_recherche.size() % 3 == 0) // Tous les 3 états, retour à la ligne
+                                decalage_ligne++;
+
+                            // On sélectionne la première transition de ce nouvel état
+                            arbre_recherche[curseur_indice_etat]->getAretes()[curseur_indice_transition]->selectionner(true);
+                            arbre_recherche[curseur_indice_etat]->AfficherEtat(_pConsole, curseur_indice_etat);
+                        }
+                        // Flèche gauche : Retour à l'état précédent
+                        else if(touche == FLECHE_GAUCHE && curseur_indice_etat-1 >= 0 && mode == 2)
+                        {
+                            // Suppression de la feuille de l'arbre de recherches
+                            arbre_recherche.pop_back(); // Appelle également le destructeur de Etat
+
+                            // On déselectionne l'ancienne transition
+                            arbre_recherche[curseur_indice_etat]->getAretes()[curseur_indice_transition]->selectionner(false);
+
+                            // On enlève l'affichage de cet état
+                            arbre_recherche[curseur_indice_etat]->DesafficherEtat(_pConsole, curseur_indice_etat);
+
+                            // Décrémentation du curseur
+                            curseur_indice_etat--;
+                            curseur_indice_transition = 0;
+
+                            if(arbre_recherche.size() % 3 == 0) // Tous les 3 états, on remonte à la ligne d'avant
+                                decalage_ligne--;
+
+                            // On sélectionne l'ancienne arête sélectionnée
+                            arbre_recherche[curseur_indice_etat]->getAretes()[arbre_recherche[curseur_indice_etat]->getIndiceTransitionSelectionnee()]->selectionner(true);
+
+                            // On réaffiche l'état d'avant pour mettre à jour
+                            arbre_recherche[curseur_indice_etat]->AfficherEtat(_pConsole, curseur_indice_etat);
+                        }
+//                        _pConsole->gotoLigCol(20, 50);
+//                        std::cout << "Indices curseur : " << curseur_indice_etat << "," << curseur_indice_transition;
+                        rafraichir_ecran = true;
+
+                        // Affichage du damier de la transition sélectionnée
+                        pEtatTemporaire = new Etat(arbre_recherche[curseur_indice_etat]->getSituationDamier(),
+                                                          (int)arbre_recherche[curseur_indice_etat]->getAretes()[curseur_indice_transition]->getPos().X,
+                                                          (int)arbre_recherche[curseur_indice_etat]->getAretes()[curseur_indice_transition]->getPos().Y,
+                                                               arbre_recherche[curseur_indice_etat]->getTour());
+
+                        pEtatTemporaire->getSituationDamier()->AfficherPetitDamier(_pConsole, 1, 45);
+                    }
+                    break;
+
+                // Appui sur G : ouverture du mode graphique
+                case 'G': case 'g':
                     _pAllegro->OuvertureModeGraphique(1280, 720);
+                    break;
+
+                default : {}
                 }
             }
         }

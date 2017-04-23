@@ -6,6 +6,7 @@ Transition::Transition(int _posx, int _posy)
 {
     m_pos.X = _posx;
     m_pos.Y = _posy;
+    m_selectionne = false;
 }
 
 // Destructeur
@@ -56,32 +57,73 @@ Etat::Etat(Damier* _pDamierPrecedent, int _ligne, int _colonne, char _couleur_pr
 Etat::~Etat()
 {
     delete m_situation_damier;
+
+    for(unsigned int i(0) ; i<m_degre ; i++)
+        delete m_aretes[i];
 }
 
-void Etat::AfficherArbreRecherche(Console* _pConsole)
+int Etat::getIndiceTransitionSelectionnee() const
 {
+    int i(0);
+    std::vector<Transition*>::const_iterator it;
+    for(it = m_aretes.begin() ; it != m_aretes.end() ; it++, i++)
+    {
+        if((*it)->estSelectionne())
+            break;
+    }
+
+    return it != m_aretes.end() ? i : -1;
+}
+
+void Etat::AfficherEtat(Console* _pConsole, int _decalage_colonne)
+{
+    const int largeur_graphique_etat = 22,
+              origine_arbre_ligne = 11,
+              origine_arbre_colonne = 45;
     int ligne = 0, colonne = 0;
     Etat* pEtatTemporaire = NULL;
+    const e_color fond = COULEUR_OR;
 
-    _pConsole->gotoLigCol(1, 50);
-    std::cout << "Simulation - Tour : " << m_couleur_tour << " - Score : " << getScore(NOIR) << "/" << getScore(BLANC) << std::endl;
+    _pConsole->gotoLigCol(origine_arbre_ligne, origine_arbre_colonne+largeur_graphique_etat*_decalage_colonne);
+    std::cout << "Coups possibles";
+    _pConsole->gotoLigCol(origine_arbre_ligne+1, origine_arbre_colonne+largeur_graphique_etat*_decalage_colonne);
+    std::cout << "pour les ";
+    (m_couleur_tour == NOIR) ? std::cout << "Noirs :" : std::cout << "Blancs :";
+
     for(unsigned int i(0) ; i<m_aretes.size() ; i++)
     {
         ligne = m_aretes[i]->getPos().X;
         colonne = m_aretes[i]->getPos().Y;
+//        fond = m_aretes[i]->estSelectionne() ? COULEUR_MARRON : COULEUR_OR;
 
         pEtatTemporaire = new Etat(m_situation_damier, ligne, colonne, m_couleur_tour);
 
-        _pConsole->gotoLigCol(5+i, 50);
-        _pConsole->setColor(COULEUR_BLANC, COULEUR_MARRON);
-        std::cout << CARAC_CARRE << " [" << pEtatTemporaire->getSituationDamier()->getNomCase(ligne, colonne) << "], Score ";
-        _pConsole->setColor(COULEUR_NOIR, COULEUR_MARRON);
+        _pConsole->gotoLigCol(origine_arbre_ligne+3+i, origine_arbre_colonne+largeur_graphique_etat*_decalage_colonne);
+        _pConsole->setColor(m_aretes[i]->estSelectionne() ? COULEUR_NOIR : COULEUR_BLANC, fond);
+        std::cout << CARAC_CARRE;
+        _pConsole->setColor(COULEUR_BLANC, fond);
+        std::cout << " [" << pEtatTemporaire->getSituationDamier()->getNomCase(ligne, colonne) << "], Score ";
+        _pConsole->setColor(COULEUR_NOIR, fond);
         std::cout << pEtatTemporaire->getSituationDamier()->CompterPions(NOIR);
-        _pConsole->setColor(COULEUR_BLANC, COULEUR_MARRON);
+        _pConsole->setColor(COULEUR_BLANC, fond);
         std::cout << " - " << pEtatTemporaire->getSituationDamier()->CompterPions(BLANC);
 
         delete pEtatTemporaire;
         pEtatTemporaire = NULL;
     }
+    _pConsole->setColor(COULEUR_BLANC, COULEUR_VERT);
 }
 
+void Etat::DesafficherEtat(Console* _pConsole, int _decalage_colonne)
+// Enlève l'affichage de l'état actuel sans passer par system("cls")
+{
+    const int largeur_graphique_etat = 22,
+              origine_arbre_ligne = 11,
+              origine_arbre_colonne = 45;
+
+    for(unsigned int ligne(0) ; ligne<m_aretes.size()+4 ; ligne++)
+    {
+        _pConsole->gotoLigCol(ligne+origine_arbre_ligne, origine_arbre_colonne+largeur_graphique_etat*_decalage_colonne);
+        _pConsole->espacer(largeur_graphique_etat);
+    }
+}

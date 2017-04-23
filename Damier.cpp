@@ -37,15 +37,6 @@ Damier::Damier(Damier* _pCopie)
     m_damier = _pCopie->getDamier();
 }
 
-Damier::Damier(Damier* _pCopie)
-{
-    //Constructeur par copie
-    m_taille = _pCopie->getTaille();
-    m_ligneAffichage = _pCopie->getLigneAffichage();
-    m_colonneAffichage = _pCopie->getColonneAffichage();
-    m_damier = _pCopie->getDamier();
-}
-
 Damier::~Damier()
 {
     //destructeur
@@ -272,89 +263,50 @@ int Damier::Chargement(char& _couleur_tour)
 
 }
 
-Damier* Damier::SimulerCoup(int _ligne, int _colonne, char _couleur)
+void Damier::AfficherPetitDamier(Console* _pConsole, const int _ligne_orig, const int _colonne_orig)
 {
-    char couleur_adverse = (_couleur == NOIR) ? BLANC : NOIR;
+    _pConsole->gotoLigCol(_ligne_orig, _colonne_orig);
 
-    // On utilise le constructeur par copie de Damier
-    Damier* pCopie = new Damier(this);
+    std::cout << BORDURE_ANGLE_HG;
+    for(int i(0) ; i<TAILLE_PLATEAU*2 ; i++)
+        std::cout << BORDURE_BARRE_HORZ;
+    std::cout << BORDURE_ANGLE_HD;
 
-    // On retourne les pions liés au coup simulé
-    pCopie->ChangerCouleurPions(_ligne, _colonne, _couleur);
-
-    // On enlève les cases indiquant les coups jouables de l'ancien tour
-    pCopie->ReinitialiserPossibilites();
-
-    // On met à jour les cases indiquant les nouveaux coups jouables pour la couleur adverse
-    for(int i=0 ; i<pCopie->getTaille() ; i++)
+    for(int i(0) ; i<TAILLE_PLATEAU ; i++)
     {
-        for(int j=0 ; j<pCopie->getTaille() ; j++)
+        _pConsole->gotoLigCol(_ligne_orig+i+1, _colonne_orig);
+        std::cout << BORDURE_BARRE_VERT;
+        for(int j(0) ; j<TAILLE_PLATEAU ; j++)
         {
-            if(pCopie->getDamier()[i][j] == couleur_adverse)
-                pCopie->CoupsPossibles(i, j, couleur_adverse);
+            switch(m_damier[i][j])
+            {
+            case NOIR:
+                _pConsole->setColor(COULEUR_NOIR, COULEUR_VERT);
+                std::cout << " O";
+                break;
+
+            case BLANC:
+                _pConsole->setColor(COULEUR_BLANC, COULEUR_VERT);
+                std::cout << " O";
+                break;
+
+            case COUP_JOUABLE:
+                _pConsole->setColor(COULEUR_MARRON, COULEUR_VERT);
+                std::cout << " .";
+                break;
+
+            default :
+                {
+                    _pConsole->setColor(COULEUR_BLANC, COULEUR_VERT);
+                    std::cout << "  ";
+                }
+            }
         }
+        std::cout << BORDURE_BARRE_VERT;
     }
-
-    // On retourne la copie
-    return pCopie;
+    _pConsole->gotoLigCol(_ligne_orig+TAILLE_PLATEAU, _colonne_orig);
+    std::cout << BORDURE_ANGLE_BG;
+    for(int i(0) ; i<TAILLE_PLATEAU*2 ; i++)
+        std::cout << BORDURE_BARRE_HORZ;
+    std::cout << BORDURE_ANGLE_BD;
 }
-
-void Damier::AfficherArbreRecherche(Console* _pConsole, int _ligne, int _colonne)
-{
-    /// TODO : faire des classes graphe - noeuds et l'implémenter
-
-    // Variables
-
-    // Simulation du damier si le joueur (noir) jouait le coup sur cette case
-    Damier* simulation_tour_joueur = SimulerCoup(_ligne, _colonne, NOIR);
-
-    // TE
-//    for(int i(0) ; i<TAILLE_PLATEAU ; i++)
-//    {
-//        for(int j(0) ; j<TAILLE_PLATEAU ; j++)
-//        {
-//            std::cout << simulation_tour_joueur->getDamier()[i][j];
-//        }
-//        std::cout << std::endl;
-//    }
-    // Simulation du damier pour l'IA
-    Damier* simulation_tour_IA = NULL;
-
-    // Vecteur regroupant tous les coups jouables
-    std::vector< std::vector<int> > coups_jouables = simulation_tour_joueur->CasesJouables();
-
-    // Coordonnées
-    int ligne = 0, colonne = 0;
-
-    // Affichages
-    _pConsole->gotoLigCol(2, 50);
-    std::cout << "Possibilites de coups de l'ordinateur";
-    _pConsole->gotoLigCol(3, 53);
-    std::cout << "a partir du coup selectionne :";
-
-    // Pour chaque coup jouable
-    for(unsigned int i(0) ; i<coups_jouables.size() ; i++)
-    {
-        // On récupère les coordonnées du coup
-        ligne = coups_jouables[i][0];
-        colonne = coups_jouables[i][1];
-
-        // L'IA simule ce coup
-        simulation_tour_IA = simulation_tour_joueur->SimulerCoup(ligne, colonne, BLANC);
-
-        // Affichage
-        _pConsole->gotoLigCol(5+i, 50);
-        _pConsole->setColor(COULEUR_BLANC, COULEUR_MARRON);
-        std::cout << CARAC_CARRE << " [" << simulation_tour_IA->getNomCase(ligne, colonne) << "], Score ";
-        _pConsole->setColor(COULEUR_NOIR, COULEUR_MARRON);
-        std::cout << simulation_tour_IA->CompterPions(NOIR);
-        _pConsole->setColor(COULEUR_BLANC, COULEUR_MARRON);
-        std::cout << " - " << simulation_tour_IA->CompterPions(BLANC);
-
-//        simulation_tour_IA->ReinitialiserPossibilites();
-//        simulation_tour_IA = NULL;
-    }
-    _pConsole->setColor(COULEUR_BLANC, COULEUR_VERT);
-}
-
-

@@ -129,9 +129,7 @@ void GfxDamier::AfficherContenu(Console* _pConsole, Damier* _pDamier)
                 break;
 
             default :
-                {
-                    std::cout << ' ';
-                }
+                { std::cout << ' '; }
             }
             _pConsole->setColor(COULEUR_BLANC, COULEUR_VERT); // Par défaut
         }
@@ -177,7 +175,17 @@ void GfxInfos::AfficherScore(Console* _pConsole, Damier* _pDamier)
     std::cout << CARAC_CARRE << ' ' << _pDamier->CompterPions(BLANC) << " pions blancs";
 }
 
-void GfxFin::AfficherFin(Damier* _pDamier)
+void GfxInfos::AfficherArbreRecherche(Console* _pConsole, std::vector<Etat*> _arbre_recherches)
+{
+    // Pour chaque noeud de l'arbre de recherches
+    for(unsigned int i(0) ; i<_arbre_recherches.size() ; i++)
+    {
+        // On affiche les informations sur le noeud
+        _arbre_recherches[i]->AfficherEtat(_pConsole, i);
+    }
+}
+
+void GfxInfos::AfficherFin(Damier* _pDamier)
 {
     int n = _pDamier->CompterPions(NOIR);
     int b = _pDamier->CompterPions(BLANC);
