@@ -37,6 +37,15 @@ Damier::Damier(Damier* _pCopie)
     m_damier = _pCopie->getDamier();
 }
 
+Damier::Damier(Damier* _pCopie)
+{
+    //Constructeur par copie
+    m_taille = _pCopie->getTaille();
+    m_ligneAffichage = _pCopie->getLigneAffichage();
+    m_colonneAffichage = _pCopie->getColonneAffichage();
+    m_damier = _pCopie->getDamier();
+}
+
 Damier::~Damier()
 {
     //destructeur
@@ -48,6 +57,12 @@ std::string Damier::getNomCase(int _ligne, int _colonne)
     nom += char('A'+_colonne);
     nom += char('1'+_ligne);
     return nom;
+}
+
+void Damier::setCaseDamier(int _ligne, int _colonne, char _valeur)
+{
+    if(_valeur == ' ' || _valeur == COUP_JOUABLE || _valeur == NOIR || _valeur == BLANC) //cases possibles du damier
+        m_damier[_ligne][_colonne] = _valeur; //change la valeur de la case aux coordonnees (_ligne, _colonne)
 }
 
 void Damier::CoupsPossibles(int _ligne, int _colonne, char _couleur_tour)
