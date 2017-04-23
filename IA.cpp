@@ -1,3 +1,9 @@
+/// \file IA.cpp
+/// \brief Implémentation des méthodes de la classe IA
+/// \author Gaël, Camille, Tom
+/// \version Version finale
+
+
 #include "IA.h"
 #include "Affichage.h"
 #include "Constantes.h"
