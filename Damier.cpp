@@ -37,15 +37,6 @@ Damier::Damier(Damier* _pCopie)
     m_damier = _pCopie->getDamier();
 }
 
-Damier::Damier(Damier* _pCopie)
-{
-    //Constructeur par copie
-    m_taille = _pCopie->getTaille();
-    m_ligneAffichage = _pCopie->getLigneAffichage();
-    m_colonneAffichage = _pCopie->getColonneAffichage();
-    m_damier = _pCopie->getDamier();
-}
-
 Damier::~Damier()
 {
     //destructeur

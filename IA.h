@@ -15,6 +15,7 @@ class IA
         ~IA();
 
         //Methodes
+        std::vector< std::vector<int> > CasesJouables(Damier* _pDamier);
         int Min(Damier* _pEtat, int _profondeur);
         int Max(Damier* _pEtat, int _profondeur);
         bool TourOrdinateur(Console* _pConsole, Damier* _pDamier, char _couleur_tour); //deroulement du tour de l'ordinateur
