@@ -268,8 +268,6 @@ int Partie::TourJoueur(int mode, Console* _pConsole, Damier* _pDamier, FenetreAl
                             // On réaffiche l'état d'avant pour mettre à jour
                             arbre_recherche[curseur_indice_etat]->AfficherEtat(_pConsole, curseur_indice_etat);
                         }
-//                        _pConsole->gotoLigCol(20, 50);
-//                        std::cout << "Indices curseur : " << curseur_indice_etat << "," << curseur_indice_transition;
                         rafraichir_ecran = true;
 
                         // Affichage du damier de la transition sélectionnée
